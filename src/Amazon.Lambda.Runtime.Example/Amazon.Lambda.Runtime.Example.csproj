@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>Amazon.Lambda</RootNamespace>
+  </PropertyGroup>
+  <Import Project="../../Shared.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
+  </ItemGroup>
+</Project>

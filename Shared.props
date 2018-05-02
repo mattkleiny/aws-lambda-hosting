@@ -1,0 +1,20 @@
+<!-- common properties for our all projects -->
+<Project>
+  <PropertyGroup>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Product>AWS Lambda Runtime</Product>
+    <Authors>Matt Kleinschafer</Authors>
+    <Copyright>Copyright© 2018, All Rights Reserved.</Copyright>
+    <Version>1.0.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\JetBrainsAnnotations.cs">
+      <Link>Shared\JetBrainsAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\SharedPreconditions.cs">
+      <Link>Shared\SharedPreconditions.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

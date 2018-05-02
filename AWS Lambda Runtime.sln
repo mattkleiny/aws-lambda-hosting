@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "(Solution Items)", "(Solution Items)", "{8635ADB4-678B-4C65-A503-5FDB8B5C2963}"
+ProjectSection(SolutionItems) = preProject
+	README.md = README.md
+	.gitignore = .gitignore
+	Shared.props = Shared.props
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared Code", "Shared Code", "{E71C5698-1F9A-435F-9642-010FFF15CDC0}"
+ProjectSection(SolutionItems) = preProject
+	Shared\JetBrainsAnnotations.cs = src\JetBrainsAnnotations.cs
+	Shared\SharedPreconditions.cs = src\SharedPreconditions.cs
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime", "src\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj", "{BD80C273-761E-42D7-AB6C-43B17EC21C20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example", "src\Amazon.Lambda.Runtime.Example\Amazon.Lambda.Runtime.Example.csproj", "{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD80C273-761E-42D7-AB6C-43B17EC21C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD80C273-761E-42D7-AB6C-43B17EC21C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD80C273-761E-42D7-AB6C-43B17EC21C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD80C273-761E-42D7-AB6C-43B17EC21C20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E71C5698-1F9A-435F-9642-010FFF15CDC0} = {8635ADB4-678B-4C65-A503-5FDB8B5C2963}
+	EndGlobalSection
+EndGlobal
