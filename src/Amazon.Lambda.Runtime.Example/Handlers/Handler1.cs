@@ -2,11 +2,10 @@
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Services;
-using JetBrains.Annotations;
 
 namespace Amazon.Lambda.Handlers
 {
-	[UsedImplicitly]
+	[LambdaFunction("Handler1")]
 	public sealed class Handler1 : ILambdaHandler
 	{
 		private readonly ITestService collaborator;
@@ -18,9 +17,9 @@ namespace Amazon.Lambda.Handlers
 			this.collaborator = collaborator;
 		}
 
-		public Task<object> ExecuteAsync(ILambdaContext context)
+		public async Task<object> ExecuteAsync(object input, ILambdaContext context)
 		{
-			return Task.FromResult<object>(collaborator.GetMessage());
+			return await collaborator.GetMessageAsync();
 		}
 	}
 }

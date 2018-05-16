@@ -1,7 +1,9 @@
-﻿namespace Amazon.Lambda.Services
+﻿using System.Threading.Tasks;
+
+namespace Amazon.Lambda.Services
 {
 	public interface ITestService
 	{
-		string GetMessage();
+		Task<string> GetMessageAsync();
 	}
 }

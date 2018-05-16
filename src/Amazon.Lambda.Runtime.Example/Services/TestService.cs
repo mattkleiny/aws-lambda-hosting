@@ -1,13 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using System.Threading.Tasks;
 
 namespace Amazon.Lambda.Services
 {
-	[UsedImplicitly]
 	public sealed class TestService : ITestService
 	{
-		public string GetMessage()
+		public Task<string> GetMessageAsync()
 		{
-			return "Hello, World!";
+			return Task.FromResult("Hello, World!");
 		}
 	}
 }

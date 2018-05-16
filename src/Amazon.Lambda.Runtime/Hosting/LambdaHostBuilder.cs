@@ -1,5 +1,4 @@
 ﻿using System;
-using Amazon.Lambda.Core;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -12,8 +11,7 @@ namespace Amazon.Lambda.Hosting
 	/// </summary>
 	public sealed class LambdaHostBuilder
 	{
-		internal object         Startup       { get; private set; }
-		internal ILambdaContext LambdaContext { get; private set; }
+		internal object Startup { get; private set; }
 
 		public LambdaHostBuilder UseStartup<TStartup>()
 			where TStartup : class, new()
@@ -22,16 +20,15 @@ namespace Amazon.Lambda.Hosting
 			return this;
 		}
 
-		/// <summary>
-		/// Provides the <see cref="ILambdaContext"/> to pass through to handlers
-		/// and the DI system. If no context is provided, a mock one will be created
-		/// that mimics the AWS Lambda environment as best as possible.
-		/// </summary>
-		public LambdaHostBuilder UseLambdaContext(ILambdaContext context)
+		public LambdaHostBuilder WithHandler<THandler>()
+			where THandler : ILambdaHandler
 		{
-			Check.NotNull(context, nameof(context));
+			return this;
+		}
 
-			LambdaContext = context;
+		public LambdaHostBuilder WithHandler<THandler>(string functionName)
+			where THandler : ILambdaHandler
+		{
 			return this;
 		}
 
@@ -39,7 +36,7 @@ namespace Amazon.Lambda.Hosting
 		{
 			Check.NotNull(Startup, nameof(Startup));
 
-			return LambdaHost.New(Startup, LambdaContext);
+			return new LambdaHost(Startup);
 		}
 	}
 }

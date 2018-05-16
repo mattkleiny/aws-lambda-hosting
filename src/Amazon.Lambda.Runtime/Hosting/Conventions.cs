@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Amazon.Lambda.Core;
 using Amazon.Lambda.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Amazon.Lambda.Hosting
 {
-	internal static class ReflectiveConfigurer
+	internal static class Conventions
 	{
-		public static void ConfigureServices(object target, IServiceCollection collection)
+		public static ServiceProvider ConfigureServices(object startup, ILambdaContext target)
 		{
+			var collection = new ServiceCollection();
+
 			FindCandidateMethods(target)
 				.Where(method => "ConfigureServices".Equals(method.Method.Name, StringComparison.OrdinalIgnoreCase))
 				.Where(method => method.Parameters.Length == 1)
 				.SingleOrDefault(method => method.Parameters.Any(parameter => parameter.ParameterType == typeof(IServiceCollection)))
 				?.Invoke(collection);
-			
+
 			// TODO: add per-environment services, as well
+			throw new NotImplementedException();
 		}
 
 		public static void ConfigureEnvironment(object target, IHostingEnvironment environment, IServiceProvider provider, IConfigurationRoot configuration)

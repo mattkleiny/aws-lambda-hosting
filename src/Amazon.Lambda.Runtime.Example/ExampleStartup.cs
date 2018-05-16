@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
+using Amazon.Lambda.Core;
 using Amazon.Lambda.Handlers;
 using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Services;
@@ -10,16 +13,21 @@ namespace Amazon.Lambda
 {
 	public sealed class ExampleStartup
 	{
-		public static Task Main(string[] args)
+		public static async Task Main(string[] args)
 		{
-			var host = new LambdaHostBuilder()
-				.UseStartup<ExampleStartup>()
-				.Build();
+			await Execute(null, null);
+		}
 
-			using (host)
-			{
-				return host.ExecuteAsync<Handler1>();
-			}
+		[UsedImplicitly]
+		[LambdaSerializer(typeof(DataContractJsonSerializer))]
+		public static Task<object> Execute(object input, ILambdaContext context)
+		{
+			return new LambdaHostBuilder()
+				.UseStartup<ExampleStartup>()
+				.WithHandler<Handler1>()
+				.WithHandler<Handler2>()
+				.Build()
+				.ExecuteAsync(input, context);
 		}
 
 		[UsedImplicitly]
@@ -31,10 +39,6 @@ namespace Amazon.Lambda
 		[UsedImplicitly]
 		public void Configure(IHostingEnvironment environment, IConfiguration configuration)
 		{
-			if (environment.IsDevelopment())
-			{
-				var metrics = configuration.GetSection("Metrics");
-			}
 		}
 	}
 }

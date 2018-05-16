@@ -5,6 +5,6 @@ namespace Amazon.Lambda.Hosting
 {
 	public interface ILambdaHandler
 	{
-		Task<object> ExecuteAsync(ILambdaContext context);
+		Task<object> ExecuteAsync(object input, ILambdaContext context);
 	}
 }
