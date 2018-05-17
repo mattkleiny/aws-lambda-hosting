@@ -1,13 +1,14 @@
-﻿using System;
-using System.Runtime.Serialization.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Handlers;
 using Amazon.Lambda.Hosting;
+using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: LambdaSerializer(typeof(JsonSerializer))]
 
 namespace Amazon.Lambda
 {
@@ -19,7 +20,6 @@ namespace Amazon.Lambda
 		}
 
 		[UsedImplicitly]
-		[LambdaSerializer(typeof(DataContractJsonSerializer))]
 		public static Task<object> Execute(object input, ILambdaContext context)
 		{
 			return new LambdaHostBuilder()

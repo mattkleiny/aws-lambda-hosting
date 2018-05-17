@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <IsPackable>False</IsPackable>
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>An example application of the Amazon.Lambda runtime.</Description>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
   <Import Project="../../Shared.props" />
   <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.3" />
   </ItemGroup>
 </Project>
