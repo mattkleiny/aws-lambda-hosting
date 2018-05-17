@@ -2,8 +2,8 @@
 
 namespace Amazon.Lambda.Services
 {
-	public interface ITestService
-	{
-		Task<string> GetMessageAsync();
-	}
+  public interface ITestService
+  {
+    Task<string> GetMessageAsync();
+  }
 }

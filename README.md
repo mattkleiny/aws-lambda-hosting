@@ -13,7 +13,7 @@ Requirements:
   configuration mechanism for these services when in a mocked/test environment.
 
 Extensions:
-``
+
 * An extension for docker integration with the ability to spin up a docker-compose environment around execution. This
   will allow for local testing of otherwise cloud-bound activities such as Dynamo or S3.
 * An extension for a CLI menu to simplify projects with many individual lambda handlers. Each handler should be made

@@ -5,21 +5,21 @@ using Amazon.Lambda.Services;
 
 namespace Amazon.Lambda.Handlers
 {
-	[LambdaFunction("Handler2")]
-	public sealed class Handler2 : ILambdaHandler
-	{
-		private readonly ITestService collaborator;
+  [LambdaFunction("lambda-runtime-example-handler-2")]
+  public sealed class Handler2 : ILambdaHandler
+  {
+    private readonly ITestService collaborator;
 
-		public Handler2(ITestService collaborator)
-		{
-			Check.NotNull(collaborator, nameof(collaborator));
+    public Handler2(ITestService collaborator)
+    {
+      Check.NotNull(collaborator, nameof(collaborator));
 
-			this.collaborator = collaborator;
-		}
+      this.collaborator = collaborator;
+    }
 
-		public async Task<object> ExecuteAsync(object input, ILambdaContext context)
-		{
-			return await collaborator.GetMessageAsync();
-		}
-	}
+    public async Task<object> ExecuteAsync(object input, ILambdaContext context)
+    {
+      return await collaborator.GetMessageAsync();
+    }
+  }
 }
