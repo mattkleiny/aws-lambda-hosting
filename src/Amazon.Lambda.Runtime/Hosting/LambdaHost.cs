@@ -16,6 +16,7 @@ namespace Amazon.Lambda.Hosting
   // TODO: bootstrap the handler based on the lambda context function name, instead?
   // TODO: consider functional execution instead of handler classes
   //			 i.e. ExecuteAsync(object input, ILambdaContext context, IConfiguration configuration, AmazonSQSClient sqs);
+  // TODO: don't forget the console and docker extension ideas
 
   public sealed class LambdaHost
   {

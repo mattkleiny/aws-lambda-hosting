@@ -19,3 +19,4 @@ Extensions:
 * An extension for a CLI menu to simplify projects with many individual lambda handlers. Each handler should be made
   available to the menu either via manual configuration or via automatic discovery over some data-source 
   (such as CloudFormation).
+* Consider a DSL for step function allocation and wire-up.

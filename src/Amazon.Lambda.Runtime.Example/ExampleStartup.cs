@@ -15,21 +15,13 @@ namespace Amazon.Lambda
 {
   public sealed class ExampleStartup
   {
-    public static async Task Main(string[] args)
-    {
-      await Execute(null, null);
-    }
-
     [UsedImplicitly]
-    public static Task<object> Execute(object input, ILambdaContext context)
-    {
-      return new LambdaHostBuilder()
-        .UseStartup<ExampleStartup>()
-        .WithHandler<Handler1>()
-        .WithHandler<Handler2>()
-        .Build()
-        .ExecuteAsync(input, context);
-    }
+    public static Task<object> Execute(object input, ILambdaContext context) => new LambdaHostBuilder()
+      .UseStartup<ExampleStartup>()
+      .WithHandler<Handler1>()
+      .WithHandler<Handler2>()
+      .Build()
+      .ExecuteAsync(input, context);
 
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)

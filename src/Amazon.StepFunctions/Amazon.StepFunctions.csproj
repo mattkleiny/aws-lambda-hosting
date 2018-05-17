@@ -1,7 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>A DSL for construction StepFunctions using pure code constructs.</Description>
-  </PropertyGroup>
-  <Import Project="../../Shared.props" />
-</Project>
