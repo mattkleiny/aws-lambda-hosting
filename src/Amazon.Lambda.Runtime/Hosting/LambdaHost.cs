@@ -36,9 +36,9 @@ namespace Amazon.Lambda.Hosting
       var environment   = new HostingEnvironment();
       var configuration = new ConfigurationBuilder().Build();
 
-      using (var services = Conventions.ConfigureServices(startup, context))
+      using (var services = Conventions.ConfigureServices(startup, environment, configuration, context))
       {
-        Conventions.ConfigureEnvironment(startup, environment, services, configuration);
+        Conventions.ConfigureEnvironment(startup, environment, configuration, services);
 
         // TODO: resolve and execute the handler
         throw new NotImplementedException();

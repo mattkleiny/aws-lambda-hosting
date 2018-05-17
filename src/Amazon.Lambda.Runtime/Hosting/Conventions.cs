@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
 {
   internal static class Conventions
   {
-    public static ServiceProvider ConfigureServices(object startup, ILambdaContext target)
+    public static ServiceProvider ConfigureServices(object startup, IHostingEnvironment environment, IConfigurationRoot configuration, ILambdaContext target)
     {
       var collection = new ServiceCollection();
 
@@ -25,7 +25,7 @@ namespace Amazon.Lambda.Hosting
       throw new NotImplementedException();
     }
 
-    public static void ConfigureEnvironment(object target, IHostingEnvironment environment, IServiceProvider provider, IConfigurationRoot configuration)
+    public static void ConfigureEnvironment(object target, IHostingEnvironment environment, IConfigurationRoot configuration, IServiceProvider provider)
     {
       void ApplyConfiguration(CandidateMethod method)
       {

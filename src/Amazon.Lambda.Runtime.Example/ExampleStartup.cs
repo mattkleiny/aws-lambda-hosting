@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Handlers;
 using Amazon.Lambda.Hosting;
@@ -31,9 +32,20 @@ namespace Amazon.Lambda
     }
 
     [UsedImplicitly]
-    public void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
     {
       services.AddScoped<ITestService, TestService>();
+
+      if (environment.IsDevelopment())
+      {
+        services.ConfigureHostingOptions(options =>
+        {
+          options.AddRedirectTable(new RedirectTable
+          {
+            [WellKnownService.DynamoDB] = new Uri("http://localhost:8000")
+          });
+        });
+      }
     }
 
     [UsedImplicitly]
