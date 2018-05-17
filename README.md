@@ -1,3 +1,4 @@
+[![aws-lambda-runtime MyGet Build Status](https://www.myget.org/BuildSource/Badge/aws-lambda-runtime?identifier=0c851967-560e-49a9-9705-ba70883a76d9)](https://www.myget.org/)
 # AWS Lambda Runtime
 
 A mechanism for bootstrapping and integration testing .NET Core based AWS Lambda functions.
@@ -12,7 +13,7 @@ Requirements:
   configuration mechanism for these services when in a mocked/test environment.
 
 Extensions:
-
+``
 * An extension for docker integration with the ability to spin up a docker-compose environment around execution. This
   will allow for local testing of otherwise cloud-bound activities such as Dynamo or S3.
 * An extension for a CLI menu to simplify projects with many individual lambda handlers. Each handler should be made

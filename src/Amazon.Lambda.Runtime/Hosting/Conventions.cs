@@ -18,8 +18,8 @@ namespace Amazon.Lambda.Hosting
 			FindCandidateMethods(target)
 				.Where(method => "ConfigureServices".Equals(method.Method.Name, StringComparison.OrdinalIgnoreCase))
 				.Where(method => method.Parameters.Length == 1)
-				.SingleOrDefault(method => method.Parameters.Any(parameter => parameter.ParameterType == typeof(IServiceCollection)))
-				?.Invoke(collection);
+				.Where(method => method.Parameters.Any(parameter => parameter.ParameterType == typeof(IServiceCollection)))
+				.ForEach(method => method.Invoke(collection));
 
 			// TODO: add per-environment services, as well
 			throw new NotImplementedException();

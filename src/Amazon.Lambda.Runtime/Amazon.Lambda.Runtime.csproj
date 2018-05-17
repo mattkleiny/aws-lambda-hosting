@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>Amazon.Lambda</RootNamespace>
+    <Description>A runtime for aiding in the construction of Amazon Lambda functions using .NET Core.</Description>
   </PropertyGroup>
   <Import Project="../../Shared.props" />
   <ItemGroup>
