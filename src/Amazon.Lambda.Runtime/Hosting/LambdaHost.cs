@@ -18,6 +18,7 @@ namespace Amazon.Lambda.Hosting
   //			 i.e. ExecuteAsync(object input, ILambdaContext context, IConfiguration configuration, AmazonSQSClient sqs);
   // TODO: don't forget the console and docker extension ideas
   // TODO: use the new host builder tool from ASP.NET Core 2.1
+  // TODO: configure well-known and extensible pipeline for deserialization
 
   public interface ILambdaHostBuilder
   {

@@ -34,7 +34,7 @@ namespace Amazon.Lambda
         {
           options.AddRedirectTable(new RedirectTable
           {
-            [WellKnownService.DynamoDB] = new Uri("http://localhost:8000"),
+            [WellKnownService.DynamoDB] = new Uri("http://localhost:8000")
           });
         });
       }
