@@ -34,14 +34,14 @@ namespace Amazon.Lambda
         {
           options.AddRedirectTable(new RedirectTable
           {
-            [WellKnownService.DynamoDB] = new Uri("http://localhost:8000")
+            [WellKnownService.DynamoDB] = new Uri("http://localhost:8000"),
           });
         });
       }
     }
 
     [UsedImplicitly]
-    public void Configure(IHostingEnvironment environment, IConfiguration configuration)
+    public void Configure(ILambdaHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration)
     {
     }
   }
