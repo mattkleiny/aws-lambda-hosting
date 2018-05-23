@@ -30,7 +30,7 @@ namespace Amazon.Lambda.Hosting
       {
         Conventions.ConfigureServices(startup, this, context.HostingEnvironment, context.Configuration, collection);
       }
-      
+
       void ApplyContainerConventions(HostBuilderContext context, IServiceCollection builder)
       {
         var services = builder.BuildServiceProvider();
@@ -43,13 +43,13 @@ namespace Amazon.Lambda.Hosting
 
       // this is supposed to be automatic, but it doesn't appear to work in the current release of the host builder
       this.UseEnvironment(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production");
-      
+
       return this;
     }
 
     /// <summary>Maps the given <see cref="ILambdaHandler"/> with it's associate <see cref="LambdaFunctionAttribute.FunctionName"/> in the host.</summary>
     public LambdaHostBuilder WithHandler<THandler>()
-      where THandler : ILambdaHandler
+      where THandler : class, ILambdaHandler
     {
       var attribute = typeof(THandler).GetCustomAttribute<LambdaFunctionAttribute>();
 
@@ -63,8 +63,14 @@ namespace Amazon.Lambda.Hosting
 
     /// <summary>Maps the given <see cref="ILambdaHandler"/> to the given <see cref="functionName"/> in the host.</summary>
     public LambdaHostBuilder WithHandler<THandler>(string functionName)
-      where THandler : ILambdaHandler
+      where THandler : class, ILambdaHandler
     {
+      ConfigureServices((context, services) =>
+      {
+        services.AddScoped<THandler>();
+        services.AddSingleton(_ => new LambdaHandlerRegistration(functionName, typeof(THandler)));
+      });
+
       return this;
     }
 
@@ -73,7 +79,10 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(context, nameof(context));
 
-      throw new NotImplementedException();
+      using (var host = new LambdaHost(Build()))
+      {
+        return await host.ExecuteAsync(input, context);
+      }
     }
   }
 }

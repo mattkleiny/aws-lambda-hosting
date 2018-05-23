@@ -3,7 +3,7 @@
 
 A mechanism for bootstrapping and integration testing .NET Core based AWS Lambda functions.
 
-This build depends on .NET Core 2.1 (currently in release candidate) and it's new [Generic Host Builder](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1).
+This build depends on .NET Core 2.1's new [Generic Host Builder](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1).
 
 Requirements:
 

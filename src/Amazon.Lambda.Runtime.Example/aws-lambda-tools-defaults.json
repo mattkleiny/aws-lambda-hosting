@@ -6,6 +6,6 @@
     "function-runtime": "dotnetcore2.0",
     "function-memory-size": 128,
     "function-timeout": 30,
-    "function-handler": "Amazon.Lambda.Runtime.Example::Amazon.Lambda.ExampleStartup::Execute",
-    "function-name": "lambda-runtime-example"
+    "function-handler": "Amazon.Lambda.Runtime.Example::Amazon.Lambda.ExampleStartup::ExecuteAsync",
+    "function-name": "lambda-runtime-example-handler-1"
 }

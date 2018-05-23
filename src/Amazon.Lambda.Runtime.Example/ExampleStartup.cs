@@ -17,14 +17,16 @@ namespace Amazon.Lambda
   public sealed class ExampleStartup
   {
     /// <summary>This is the entry point from the CLI.</summary>
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-      Execute(null, null);
+      var execute = await ExecuteAsync(null, new LocalLambdaContext("lambda-runtime-example-handler-1"));
+      
+      Console.WriteLine(execute);
     }
     
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]
-    public static Task<object> Execute(object input, ILambdaContext context) => new LambdaHostBuilder()
+    public static Task<object> ExecuteAsync(object input, ILambdaContext context) => new LambdaHostBuilder()
       .UseStartup<ExampleStartup>()
       .WithHandler<Handler1>()
       .WithHandler<Handler2>()
