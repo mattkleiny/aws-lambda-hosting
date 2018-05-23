@@ -16,6 +16,6 @@ namespace Amazon.Lambda.Testing
     ILambdaContext Context { get; }
     THandler       Handler { get; }
 
-    Task<object> ExecuteAsync();
+    Task<object> ExecuteAsync(object input);
   }
 }

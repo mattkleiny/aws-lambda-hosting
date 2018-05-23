@@ -1,5 +1,6 @@
 ﻿using System;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.Diagnostics;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -19,7 +20,7 @@ namespace Amazon.Lambda.Hosting
     public string           FunctionVersion    { get; } = "Unknown";
     public ICognitoIdentity Identity           { get; } = null; // TODO: mock this?
     public string           InvokedFunctionArn { get; } = string.Empty;
-    public ILambdaLogger    Logger             { get; } = null; // TODO: adapt this?
+    public ILambdaLogger    Logger             { get; } = ConsoleLambdaLogger.Instance;
     public string           LogGroupName       { get; } = string.Empty;
     public string           LogStreamName      { get; } = string.Empty;
     public int              MemoryLimitInMB    { get; } = int.MaxValue;

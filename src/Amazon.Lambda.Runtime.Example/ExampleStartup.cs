@@ -16,6 +16,14 @@ namespace Amazon.Lambda
 {
   public sealed class ExampleStartup
   {
+    /// <summary>The <see cref="IHostBuilder"/> for this example.</summary>
+    public static IHostBuilder HostBuilder => new HostBuilder()
+      .UseStartup<ExampleStartup>()
+      .UseS3()
+      .UseDynamo()
+      .WithHandler<Handler1>()
+      .WithHandler<Handler2>();
+
     /// <summary>This is the entry point from the CLI.</summary>
     public static async Task Main(string[] args)
     {
@@ -27,13 +35,8 @@ namespace Amazon.Lambda
 
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]
-    public static Task<object> ExecuteAsync(object input, ILambdaContext context) => new HostBuilder()
-      .UseStartup<ExampleStartup>()
-      .UseS3()
-      .UseDynamo()
-      .WithHandler<Handler1>()
-      .WithHandler<Handler2>()
-      .RunLambdaAsync(input, context);
+    public static Task<object> ExecuteAsync(object input, ILambdaContext context)
+      => HostBuilder.RunLambdaAsync(input, context);
 
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)

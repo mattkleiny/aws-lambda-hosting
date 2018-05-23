@@ -7,16 +7,15 @@ namespace Amazon.Lambda.Testing
   /// <summary>Extensions for dispatching particular workloads and configurations to a <see cref="ILambdaUnderTest{THandler}"/>.</summary>
   public static class LambdaUnderTestExtensions
   {
-    public static ILambdaUnderTest<THandler> WithContext<THandler>(this ILambdaUnderTest<THandler> target, ILambdaContext context)
+    /// <summary>Attaches the given <see cref="ILambdaContext"/> options to the given <see cref="ILambdaUnderTest{THandler}"/>.</summary>
+    public static ILambdaUnderTest<THandler> WithContext<THandler>(this ILambdaUnderTest<THandler> target, Action<TestLambdaContext> configurer)
       where THandler : class, ILambdaHandler
     {
-      throw new NotImplementedException();
-    }
+      var context = new TestLambdaContext(target.Context);
 
-    public static ILambdaUnderTest<THandler> WithDerivedContext<THandler>(this ILambdaUnderTest<THandler> target, ILambdaContext context)
-      where THandler : class, ILambdaHandler
-    {
-      throw new NotImplementedException();
+      configurer(context);
+
+      return new LambdaUnderTest<THandler>(context, target.Handler);
     }
   }
 }
