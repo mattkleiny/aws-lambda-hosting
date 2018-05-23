@@ -21,6 +21,11 @@ namespace Amazon.Lambda.Hosting
           if (options.DefaultEndpoint != null) config.RegionEndpoint      = options.DefaultEndpoint;
           if (options.RedirectTable.Contains("dynamo")) config.ServiceURL = options.RedirectTable["dynamo"].ToString();
 
+          if (!string.IsNullOrEmpty(options.AccessKey) || !string.IsNullOrEmpty(options.SecretKey))
+          {
+            return new AmazonDynamoDBClient(options.AccessKey, options.SecretKey, config);
+          }
+
           return new AmazonDynamoDBClient(config);
         });
       });

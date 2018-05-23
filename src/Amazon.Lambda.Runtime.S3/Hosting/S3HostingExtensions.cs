@@ -20,6 +20,11 @@ namespace Amazon.Lambda.Hosting
 
           if (options.DefaultEndpoint != null) config.RegionEndpoint  = options.DefaultEndpoint;
           if (options.RedirectTable.Contains("s3")) config.ServiceURL = options.RedirectTable["s3"].ToString();
+          
+          if (!string.IsNullOrEmpty(options.AccessKey) || !string.IsNullOrEmpty(options.SecretKey))
+          {
+            return new AmazonS3Client(options.AccessKey, options.SecretKey, config);
+          }
 
           return new AmazonS3Client(config);
         });

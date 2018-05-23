@@ -15,7 +15,10 @@ namespace Amazon.Lambda.Runtime.Example.Tests.Handlers
         // test-specific hosting options
         services.ConfigureHostingOptions(options =>
         {
-          options.DefaultEndpoint                    = RegionEndpoint.APSoutheast2;
+          options.AccessKey       = "A1B2C3D4E5";
+          options.SecretKey       = "A1B2C3D4E5";
+          options.DefaultEndpoint = RegionEndpoint.APSoutheast2;
+
           options.RedirectTable[WellKnownService.S3] = new Uri("http://localhost:5000/minio");
         });
       })
