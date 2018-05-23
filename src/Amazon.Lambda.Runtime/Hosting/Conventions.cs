@@ -12,6 +12,7 @@ namespace Amazon.Lambda.Hosting
   /// <summary>Applies convention-based configuration of the host and pipeline.</summary>
   internal static class Conventions
   {
+    /// <summary>Applies the 'ConfigureServices' and 'Configure{Development/Staging/Production/etc}Services' methods with the given context.</summary>
     public static void ConfigureServices(object startup, IHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration, IServiceCollection collection)
     {
       void ApplyConfiguration(CandidateMethod method)
@@ -42,6 +43,7 @@ namespace Amazon.Lambda.Hosting
         .ForEach(ApplyConfiguration);
     }
 
+    /// <summary>Applies the 'Configure' and 'Configure{Development/Staging/Production/etc}' methods with the given context.</summary>
     public static void ConfigureEnvironment(object target, IHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration, IServiceProvider provider)
     {
       void ApplyConfiguration(CandidateMethod method)
@@ -70,6 +72,7 @@ namespace Amazon.Lambda.Hosting
         .ForEach(ApplyConfiguration);
     }
 
+    /// <summary>Finds all of the <see cref="CandidateMethod"/>s on the given types that are both public and instance-bound.</summary>
     private static IEnumerable<CandidateMethod> FindCandidateMethods(object target) => target.GetType()
       .GetMethods(BindingFlags.Public | BindingFlags.Instance)
       .Select(method => new CandidateMethod(target, method));

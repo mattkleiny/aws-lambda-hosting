@@ -9,21 +9,30 @@ namespace Amazon.Lambda.Hosting
   {
     public static IServiceCollection ConfigureHostingOptions(this IServiceCollection services, Action<HostingOptions> configurer)
     {
-      throw new NotImplementedException();
+      return services;
     }
   }
 
-  public class HostingOptions
+  public sealed class HostingOptions
   {
     public void AddRedirectTable(RedirectTable table)
     {
-      throw new NotImplementedException();
     }
   }
 
-  public sealed class RedirectTable : IEnumerable<KeyValuePair<string, Uri>>
+  internal interface IRedirectProvider
+  {
+    string GetServiceBaseUrl(string name);
+  }
+
+  public sealed class RedirectTable : IEnumerable<KeyValuePair<string, Uri>>, IRedirectProvider
   {
     private readonly IDictionary<string, Uri> entries = new Dictionary<string, Uri>(StringComparer.OrdinalIgnoreCase);
+
+    public string GetServiceBaseUrl(string name)
+    {
+      return entries[name].ToString();
+    }
 
     public Uri this[string service]
     {
@@ -58,7 +67,9 @@ namespace Amazon.Lambda.Hosting
 
   public enum WellKnownService
   {
-    Dynamo,
     S3,
+    SQS,
+    SNS,
+    Dynamo,
   }
 }
