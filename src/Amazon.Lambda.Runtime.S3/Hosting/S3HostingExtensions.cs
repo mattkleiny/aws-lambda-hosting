@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with S3.</summary>
-  public static class DynamoHostingExtensions
+  public static class S3HostingExtensions
   {
     /// <summary>Adds <see cref="AmazonS3Client"/> to the host.</summary>
     public static IHostBuilder UseS3(this IHostBuilder builder)
@@ -18,10 +18,8 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonS3Config();
 
-          if (options.RedirectTable.Contains("s3"))
-          {
-            config.ServiceURL = options.RedirectTable["s3"].ToString();
-          }
+          if (options.DefaultEndpoint != null) config.RegionEndpoint  = options.DefaultEndpoint;
+          if (options.RedirectTable.Contains("s3")) config.ServiceURL = options.RedirectTable["s3"].ToString();
 
           return new AmazonS3Client(config);
         });

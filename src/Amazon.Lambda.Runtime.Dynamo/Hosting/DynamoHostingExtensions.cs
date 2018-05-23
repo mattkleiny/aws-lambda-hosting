@@ -18,10 +18,8 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonDynamoDBConfig();
 
-          if (options.RedirectTable.Contains("dynamo"))
-          {
-            config.ServiceURL = options.RedirectTable["dynamo"].ToString();
-          }
+          if (options.DefaultEndpoint != null) config.RegionEndpoint      = options.DefaultEndpoint;
+          if (options.RedirectTable.Contains("dynamo")) config.ServiceURL = options.RedirectTable["dynamo"].ToString();
 
           return new AmazonDynamoDBClient(config);
         });
