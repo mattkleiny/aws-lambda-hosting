@@ -1,41 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Amazon.Lambda.Hosting
+namespace Amazon.Lambda.Services
 {
-  public static class RedirectExtensions
-  {
-    public static IServiceCollection ConfigureHostingOptions(this IServiceCollection services, Action<HostingOptions> configurer)
-    {
-      return services;
-    }
-  }
-
-  public sealed class HostingOptions
-  {
-    public void AddRedirectTable(RedirectTable table)
-    {
-    }
-  }
-
-  internal interface IRedirectProvider
-  {
-    string GetServiceBaseUrl(string name);
-  }
-
-  public sealed class RedirectTable : IEnumerable<KeyValuePair<string, Uri>>, IRedirectProvider
+  /// <summary>
+  /// A simple table for providing redirects for common application services.
+  /// <para/>
+  /// You can use this to set-up a single instance of a service inside the DI container and then
+  /// redirect it's endponit based on your hosting environment.
+  /// </summary>
+  public sealed class RedirectTable : IEnumerable<KeyValuePair<string, Uri>>
   {
     private readonly IDictionary<string, Uri> entries = new Dictionary<string, Uri>(StringComparer.OrdinalIgnoreCase);
 
-    public string GetServiceBaseUrl(string name)
-    {
-      return entries[name].ToString();
-    }
-
+    /// <summary>Sets the redirect <see cref="Uri"/> for the given service.</summary>
     public Uri this[string service]
     {
+      get => entries[service];
       set
       {
         Check.That(value.IsAbsoluteUri, "The URI provided for {service} needs to be absolute");
@@ -44,6 +26,7 @@ namespace Amazon.Lambda.Hosting
       }
     }
 
+    /// <summary>Sets the redirect <see cref="Uri"/> for the given <see cref="WellKnownService"/> .</summary>
     public Uri this[WellKnownService service]
     {
       set => this[ResolveService(service)] = value;
@@ -53,8 +36,10 @@ namespace Amazon.Lambda.Hosting
     {
       switch (service)
       {
-        case WellKnownService.Dynamo: return "https://dynamodb.aws.com";
-        case WellKnownService.S3:     return "https://s3.aws.com";
+        case WellKnownService.Dynamo: return "dynamo";
+        case WellKnownService.S3:     return "s3";
+        case WellKnownService.SNS:    return "sns";
+        case WellKnownService.SQS:    return "sqs";
 
         default:
           throw new ArgumentException($"An unrecognized service was provided: {service}");
@@ -63,13 +48,5 @@ namespace Amazon.Lambda.Hosting
 
     public IEnumerator<KeyValuePair<string, Uri>> GetEnumerator() => entries.GetEnumerator();
     IEnumerator IEnumerable.                      GetEnumerator() => GetEnumerator();
-  }
-
-  public enum WellKnownService
-  {
-    S3,
-    SQS,
-    SNS,
-    Dynamo,
   }
 }

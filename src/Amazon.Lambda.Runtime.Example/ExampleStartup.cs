@@ -41,10 +41,7 @@ namespace Amazon.Lambda
       {
         services.ConfigureHostingOptions(options =>
         {
-          options.AddRedirectTable(new RedirectTable
-          {
-            [WellKnownService.Dynamo] = new Uri("http://localhost:8000")
-          });
+          options.RedirectTable[WellKnownService.Dynamo] = new Uri("http://localhost:8000");
         });
       }
     }

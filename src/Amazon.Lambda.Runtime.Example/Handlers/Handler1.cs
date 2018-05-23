@@ -1,25 +1,25 @@
 ﻿using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
-using Amazon.Lambda.Services;
+using Microsoft.Extensions.Options;
 
 namespace Amazon.Lambda.Handlers
 {
   [LambdaFunction("lambda-runtime-example-handler-1")]
   public sealed class Handler1 : ILambdaHandler
   {
-    private readonly ITestService collaborator;
+    private readonly HostingOptions options;
 
-    public Handler1(ITestService collaborator)
+    public Handler1(IOptions<HostingOptions> options)
     {
-      Check.NotNull(collaborator, nameof(collaborator));
-
-      this.collaborator = collaborator;
+      Check.NotNull(options, nameof(options));
+      
+      this.options = options.Value;
     }
 
-    public async Task<object> ExecuteAsync(object input, ILambdaContext context)
+    public Task<object> ExecuteAsync(object input, ILambdaContext context)
     {
-      return await collaborator.GetMessageAsync();
+      return Task.FromResult(options.RedirectTable["dynamo"] as object);
     }
   }
 }
