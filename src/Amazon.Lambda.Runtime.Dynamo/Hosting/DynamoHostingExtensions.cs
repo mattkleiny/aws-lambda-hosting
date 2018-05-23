@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 namespace Amazon.Lambda.Hosting
@@ -8,9 +9,9 @@ namespace Amazon.Lambda.Hosting
   public static class DynamoHostingExtensions
   {
     /// <summary>Adds <see cref="AmazonDynamoDBClient"/> to the host.</summary>
-    public static LambdaHostBuilder UseDynamo(this LambdaHostBuilder builder)
+    public static IHostBuilder UseDynamo(this IHostBuilder builder)
     {
-      builder.ConfigureServices((context, services) =>
+      return builder.ConfigureServices((context, services) =>
       {
         services.AddScoped(provider =>
         {
@@ -25,8 +26,6 @@ namespace Amazon.Lambda.Hosting
           return new AmazonDynamoDBClient(config);
         });
       });
-
-      return builder;
     }
   }
 }

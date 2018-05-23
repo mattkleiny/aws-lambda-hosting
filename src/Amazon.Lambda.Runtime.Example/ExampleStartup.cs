@@ -27,13 +27,13 @@ namespace Amazon.Lambda
 
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]
-    public static Task<object> ExecuteAsync(object input, ILambdaContext context) => new LambdaHostBuilder()
+    public static Task<object> ExecuteAsync(object input, ILambdaContext context) => new HostBuilder()
       .UseStartup<ExampleStartup>()
       .UseS3()
       .UseDynamo()
       .WithHandler<Handler1>()
       .WithHandler<Handler2>()
-      .ExecuteAsync(input, context);
+      .RunLambdaAsync(input, context);
 
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)

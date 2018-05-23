@@ -1,5 +1,6 @@
 ﻿using System;
 using Amazon.Lambda.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Amazon.Lambda.Testing
 {
@@ -10,7 +11,7 @@ namespace Amazon.Lambda.Testing
   /// </summary>
   public sealed class LambdaTestFixture
   {
-    public LambdaTestFixture(LambdaHostBuilder builder)
+    public LambdaTestFixture(IHostBuilder builder)
     {
       Check.NotNull(builder, nameof(builder));
 
