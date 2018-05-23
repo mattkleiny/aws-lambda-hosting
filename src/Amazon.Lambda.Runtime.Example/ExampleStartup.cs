@@ -25,13 +25,8 @@ namespace Amazon.Lambda
       .WithHandler<Handler2>();
 
     /// <summary>This is the entry point from the CLI.</summary>
-    public static async Task Main(string[] args)
-    {
-      var context = new LocalLambdaContext("lambda-runtime-example-handler-1");
-      var result  = await ExecuteAsync(null, context);
-
-      Console.WriteLine(result);
-    }
+    public static Task Main(string[] args)
+      => HostBuilder.WithLambdaSwitchboard().RunConsoleAsync();
 
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]

@@ -66,8 +66,8 @@ namespace Amazon.Lambda.Hosting
       where THandler : class, ILambdaHandler
     {
       Check.NotNullOrEmpty(functionName, nameof(functionName));
-      
-      builder.ConfigureServices((context, services) =>
+
+      builder.ConfigureServices(services =>
       {
         services.AddScoped<THandler>();
         services.AddSingleton(_ => new LambdaHandlerRegistration(functionName, typeof(THandler)));
@@ -97,11 +97,19 @@ namespace Amazon.Lambda.Hosting
       return await handler.ExecuteAsync(input, context);
     }
 
+    /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
+    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
+    {
+      builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
+      
+      return builder;
+    }
+
     /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given <see cref="ILambdaContext"/>.</summary>
     public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, ILambdaContext context)
     {
       Check.NotNull(context, nameof(context));
-      
+
       return services.ResolveLambdaHandler(context.FunctionName);
     }
 
@@ -109,7 +117,7 @@ namespace Amazon.Lambda.Hosting
     public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, string functionName)
     {
       Check.NotNullOrEmpty(functionName, nameof(functionName));
-      
+
       var registrations = services.GetServices<LambdaHandlerRegistration>();
 
       foreach (var registration in registrations)
