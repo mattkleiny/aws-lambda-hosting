@@ -60,13 +60,14 @@ namespace Amazon.Lambda.Hosting
         // read the id of the handler to execute
         Console.Write("> ");
         if (!int.TryParse(Console.ReadLine(), out var option)) continue;
+        if (option < 0 || option >= registrations.Length) continue;
 
         var registration = registrations[option];
 
         Console.WriteLine($"Executing {registration.HandlerType}");
 
         // TODO: support various types of input here
-        
+
         var result = host.RunLambdaAsync(null, new LocalLambdaContext(registration.FunctionName)).Result;
 
         Console.WriteLine(result);
