@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -9,14 +11,25 @@ namespace Amazon.Lambda.Hosting
   /// for it's flexibility and familiarity, and permits execution of handlers
   /// either via a testing harness, in-situ or from the AWS production runtime.
   /// </summary>
-  public sealed class LambdaHostBuilder
+  public sealed class LambdaHostBuilder : HostBuilder
   {
-    internal object Startup { get; private set; }
-
     public LambdaHostBuilder UseStartup<TStartup>()
       where TStartup : class, new()
     {
-      Startup = new TStartup();
+      var startup = new TStartup();
+
+      ConfigureServices((context, collection) =>
+      {
+        Conventions.ConfigureServices(startup, this, context.HostingEnvironment, context.Configuration, collection);
+      });
+      
+      ConfigureContainer<IServiceCollection>((context, builder) =>
+      {
+        var services = builder.BuildServiceProvider();
+        
+        Conventions.ConfigureEnvironment(startup, this, context.HostingEnvironment, context.Configuration, services);
+      });
+      
       return this;
     }
 
@@ -32,11 +45,9 @@ namespace Amazon.Lambda.Hosting
       return this;
     }
 
-    public LambdaHost Build()
+    public LambdaHost BuildLambdaHost()
     {
-      Check.NotNull(Startup, nameof(Startup));
-
-      return new LambdaHost(Startup);
+      return new LambdaHost(Build());
     }
   }
 }

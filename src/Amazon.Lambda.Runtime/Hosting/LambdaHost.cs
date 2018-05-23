@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -17,46 +16,29 @@ namespace Amazon.Lambda.Hosting
   // TODO: consider functional execution instead of handler classes
   //			 i.e. ExecuteAsync(object input, ILambdaContext context, IConfiguration configuration, AmazonSQSClient sqs);
   // TODO: don't forget the console and docker extension ideas
-  // TODO: use the new host builder tool from ASP.NET Core 2.1
   // TODO: configure well-known and extensible pipeline for deserialization
 
-  public interface ILambdaHostBuilder
+  public sealed class LambdaHost : IDisposable
   {
-  }
+    private readonly IHost host;
 
-  public sealed class LambdaHost
-  {
-    private readonly object startup;
-
-    internal LambdaHost(object startup)
+    internal LambdaHost(IHost host)
     {
-      Check.NotNull(startup, nameof(startup));
+      Check.NotNull(host, nameof(host));
 
-      this.startup = startup;
+      this.host = host;
     }
 
-    public Task<object> ExecuteAsync(object input, ILambdaContext context)
+    public async Task<object> ExecuteAsync(object input, ILambdaContext context)
     {
       Check.NotNull(context, nameof(context));
 
-      // TODO: discover the source environment here, somehow
-      var environment   = new HostingEnvironment();
-      var configuration = new ConfigurationBuilder().Build();
-
-      using (var services = Conventions.ConfigureServices(startup, environment, configuration, context))
-      {
-        Conventions.ConfigureEnvironment(startup, environment, configuration, services);
-
-        // TODO: resolve and execute the handler
-        throw new NotImplementedException();
-      }
+      throw new NotImplementedException();
     }
 
-    private sealed class HostingEnvironment : IHostingEnvironment
+    public void Dispose()
     {
-      // TODO: implement these
-      public string ApplicationName { get; } = "Test";
-      public string EnvironmentName { get; } = "Development";
+      host.Dispose();
     }
   }
 }

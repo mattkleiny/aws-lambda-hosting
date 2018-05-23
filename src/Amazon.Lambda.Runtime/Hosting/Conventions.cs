@@ -2,35 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Amazon.Lambda.Core;
 using Amazon.Lambda.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Amazon.Lambda.Hosting
 {
+  /// <summary>Applies convention-based configuration of the host and pipeline.</summary>
   internal static class Conventions
   {
-    public static ServiceProvider ConfigureServices(object startup, IHostingEnvironment environment, IConfigurationRoot configuration, ILambdaContext target)
+    public static void ConfigureServices(object startup, IHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration, IServiceCollection collection)
     {
-      var collection = new ServiceCollection();
+      void ApplyConfiguration(CandidateMethod method)
+      {
+        var parameters = method.Parameters.Select<ParameterInfo, object>(parameter =>
+        {
+          if (parameter.ParameterType == typeof(IHostBuilder)) return builder;
+          if (parameter.ParameterType == typeof(IHostingEnvironment)) return environment;
+          if (parameter.ParameterType == typeof(IServiceCollection)) return collection;
+          if (parameter.ParameterType == typeof(IConfiguration)) return configuration;
 
-      FindCandidateMethods(target)
+          throw new ArgumentException($"An unrecognized argument type was requested: {parameter.ParameterType}");
+        });
+
+        method.Invoke(parameters.ToArray());
+      }
+
+      // root services
+      FindCandidateMethods(startup)
         .Where(method => "ConfigureServices".Equals(method.Method.Name, StringComparison.OrdinalIgnoreCase))
-        .Where(method => method.Parameters.Length == 1)
         .Where(method => method.Parameters.Any(parameter => parameter.ParameterType == typeof(IServiceCollection)))
-        .ForEach(method => method.Invoke(collection));
+        .ForEach(ApplyConfiguration);
 
-      // TODO: add per-environment services, as well
-      throw new NotImplementedException();
+      // per-environment services
+      FindCandidateMethods(startup)
+        .Where(method => $"Configure{environment.EnvironmentName}Services".Equals(method.Method.Name, StringComparison.OrdinalIgnoreCase))
+        .Where(method => method.Parameters.Any(parameter => parameter.ParameterType == typeof(IServiceCollection)))
+        .ForEach(ApplyConfiguration);
     }
 
-    public static void ConfigureEnvironment(object target, IHostingEnvironment environment, IConfigurationRoot configuration, IServiceProvider provider)
+    public static void ConfigureEnvironment(object target, IHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration, IServiceProvider provider)
     {
       void ApplyConfiguration(CandidateMethod method)
       {
         var parameters = method.Parameters.Select(parameter =>
         {
+          if (parameter.ParameterType == typeof(IHostBuilder)) return builder;
           if (parameter.ParameterType == typeof(IHostingEnvironment)) return environment;
           if (parameter.ParameterType == typeof(IServiceProvider)) return provider;
           if (parameter.ParameterType == typeof(IConfiguration)) return configuration;

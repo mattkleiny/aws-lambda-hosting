@@ -1,7 +1,7 @@
 <!-- common properties for our all projects -->
 <Project>
   <PropertyGroup>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Product>AWS Lambda Runtime</Product>

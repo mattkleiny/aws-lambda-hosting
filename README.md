@@ -3,6 +3,9 @@
 
 A mechanism for bootstrapping and integration testing .NET Core based AWS Lambda functions.
 
+Based on the new [Generic Host](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1) 
+builder tools from Microsoft.
+
 Requirements:
 
 * The ability to bootstrap lambda functions either in-situ (from abitrary code), from a test case or from the AWS Lambda

@@ -8,6 +8,7 @@ using Amazon.Lambda.Services;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 [assembly: LambdaSerializer(typeof(JsonSerializer))]
 
@@ -15,12 +16,17 @@ namespace Amazon.Lambda
 {
   public sealed class ExampleStartup
   {
+    public static void Main(string[] args)
+    {
+      Execute(null, null);
+    }
+    
     [UsedImplicitly]
     public static Task<object> Execute(object input, ILambdaContext context) => new LambdaHostBuilder()
       .UseStartup<ExampleStartup>()
       .WithHandler<Handler1>()
       .WithHandler<Handler2>()
-      .Build()
+      .BuildLambdaHost()
       .ExecuteAsync(input, context);
 
     [UsedImplicitly]
@@ -34,14 +40,14 @@ namespace Amazon.Lambda
         {
           options.AddRedirectTable(new RedirectTable
           {
-            [WellKnownService.DynamoDB] = new Uri("http://localhost:8000")
+            [WellKnownService.Dynamo] = new Uri("http://localhost:8000")
           });
         });
       }
     }
 
     [UsedImplicitly]
-    public void Configure(ILambdaHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration)
+    public void Configure(IHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration)
     {
     }
   }
