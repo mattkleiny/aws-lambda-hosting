@@ -19,15 +19,18 @@ namespace Amazon.Lambda
     /// <summary>This is the entry point from the CLI.</summary>
     public static async Task Main(string[] args)
     {
-      var execute = await ExecuteAsync(null, new LocalLambdaContext("lambda-runtime-example-handler-1"));
-      
-      Console.WriteLine(execute);
+      var context = new LocalLambdaContext("lambda-runtime-example-handler-1");
+      var result  = await ExecuteAsync(null, context);
+
+      Console.WriteLine(result);
     }
-    
+
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]
     public static Task<object> ExecuteAsync(object input, ILambdaContext context) => new LambdaHostBuilder()
       .UseStartup<ExampleStartup>()
+      .UseS3()
+      .UseDynamo()
       .WithHandler<Handler1>()
       .WithHandler<Handler2>()
       .ExecuteAsync(input, context);
@@ -41,6 +44,7 @@ namespace Amazon.Lambda
       {
         services.ConfigureHostingOptions(options =>
         {
+          options.RedirectTable[WellKnownService.S3]     = new Uri("http://localhost:5000/minio");
           options.RedirectTable[WellKnownService.Dynamo] = new Uri("http://localhost:8000");
         });
       }

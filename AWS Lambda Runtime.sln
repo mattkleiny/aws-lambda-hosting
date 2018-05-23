@@ -19,6 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Examp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example.Tests", "tests\Amazon.Lambda.Runtime.Example.Tests\Amazon.Lambda.Runtime.Example.Tests.csproj", "{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.S3", "src\Amazon.Lambda.Runtime.S3\Amazon.Lambda.Runtime.S3.csproj", "{87356F62-FEE1-424F-8A0E-A90C696EDF0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Dynamo", "src\Amazon.Lambda.Runtime.Dynamo\Amazon.Lambda.Runtime.Dynamo.csproj", "{2046CCCC-C718-4418-B901-25E68A94A2A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{35BA3CF1-9674-4781-9133-271CB59A5023}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{08FD12B7-6CFA-4AB0-BDBB-6574915724A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,8 +45,20 @@ Global
 		{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87356F62-FEE1-424F-8A0E-A90C696EDF0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87356F62-FEE1-424F-8A0E-A90C696EDF0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87356F62-FEE1-424F-8A0E-A90C696EDF0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87356F62-FEE1-424F-8A0E-A90C696EDF0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E71C5698-1F9A-435F-9642-010FFF15CDC0} = {8635ADB4-678B-4C65-A503-5FDB8B5C2963}
+		{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02} = {35BA3CF1-9674-4781-9133-271CB59A5023}
+		{B5CB6C08-B752-437F-AE9D-CDA6F77589AA} = {35BA3CF1-9674-4781-9133-271CB59A5023}
+		{2046CCCC-C718-4418-B901-25E68A94A2A6} = {08FD12B7-6CFA-4AB0-BDBB-6574915724A3}
+		{87356F62-FEE1-424F-8A0E-A90C696EDF0C} = {08FD12B7-6CFA-4AB0-BDBB-6574915724A3}
 	EndGlobalSection
 EndGlobal

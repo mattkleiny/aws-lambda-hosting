@@ -14,10 +14,21 @@ namespace Amazon.Lambda.Services
   {
     private readonly IDictionary<string, Uri> entries = new Dictionary<string, Uri>(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>Determines if the given service contains an entry in the table.</summary>
+    public bool Contains(string service) => entries.ContainsKey(service);
+
     /// <summary>Sets the redirect <see cref="Uri"/> for the given service.</summary>
     public Uri this[string service]
     {
-      get => entries[service];
+      get
+      {
+        if (!entries.TryGetValue(service, out var uri))
+        {
+          throw new ArgumentException($"The given service {service} is not mapped in the redirect table.");
+        }
+
+        return uri;
+      }
       set
       {
         Check.That(value.IsAbsoluteUri, "The URI provided for {service} needs to be absolute");

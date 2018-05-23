@@ -1,25 +1,25 @@
 ﻿using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
-using Microsoft.Extensions.Options;
+using Amazon.S3;
 
 namespace Amazon.Lambda.Handlers
 {
   [LambdaFunction("lambda-runtime-example-handler-1")]
   public sealed class Handler1 : ILambdaHandler
   {
-    private readonly HostingOptions options;
+    private readonly AmazonS3Client client;
 
-    public Handler1(IOptions<HostingOptions> options)
+    public Handler1(AmazonS3Client client)
     {
-      Check.NotNull(options, nameof(options));
-      
-      this.options = options.Value;
+      Check.NotNull(client, nameof(client));
+
+      this.client = client;
     }
 
     public Task<object> ExecuteAsync(object input, ILambdaContext context)
     {
-      return Task.FromResult(options.RedirectTable["dynamo"] as object);
+      return Task.FromResult<object>($"S3 configured with {client.Config.ServiceURL}");
     }
   }
 }
