@@ -42,7 +42,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Builds the main <see cref="Thread"/> for executing the switchboard.</summary>
     private Thread BuildThread() => new Thread(() =>
     {
-      Thread.Sleep(500); // HACK: wait until the rest of the logs have completed
+      Thread.Sleep(100); // HACK: wait until the rest of the logs have completed
 
       Console.WriteLine("Welcome to the lambda switchboard.");
       Console.WriteLine("Please make your selection below:");
