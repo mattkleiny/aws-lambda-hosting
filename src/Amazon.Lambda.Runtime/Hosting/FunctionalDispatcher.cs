@@ -43,7 +43,7 @@ namespace Amazon.Lambda.Hosting
         }
       }
 
-      throw new InvalidOperationException($"Unable to resolve functional handler for {context.FunctionName}");
+      throw new UnresolvedHandlerException($"Unable to resolve functional handler for {context.FunctionName}");
     }
 
     /// <summary>A wrapper for a functional invocation target.</summary>
