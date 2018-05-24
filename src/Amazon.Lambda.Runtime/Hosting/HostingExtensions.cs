@@ -10,7 +10,7 @@ namespace Amazon.Lambda.Hosting
   /// <summary>
   /// Extensions for the <see cref="IHostBuilder"/> for use in AWS Lambda execution.
   /// <para/>
-  /// Provides a configuration model very similar to a traditional ASP.NET Core WEb application but
+  /// Provides a configuration model very similar to a traditional ASP.NET Core Web application but
   /// with conveniences to help with environment-specific Lambda configuration and testing.
   /// </summary>
   public static class HostingExtensions

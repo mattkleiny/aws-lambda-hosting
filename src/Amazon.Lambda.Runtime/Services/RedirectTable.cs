@@ -8,7 +8,7 @@ namespace Amazon.Lambda.Services
   /// A simple table for providing redirects for common application services.
   /// <para/>
   /// You can use this to set-up a single instance of a service inside the DI container and then
-  /// redirect it's endponit based on your hosting environment.
+  /// redirect it's endpoint based on your hosting environment.
   /// </summary>
   public sealed class RedirectTable : IEnumerable<KeyValuePair<string, Uri>>
   {

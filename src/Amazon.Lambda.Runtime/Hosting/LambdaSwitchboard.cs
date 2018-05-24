@@ -36,7 +36,6 @@ namespace Amazon.Lambda.Hosting
     public Task StopAsync(CancellationToken cancellationToken)
     {
       // we're on a background thread which should terminate gracefully
-
       return Task.CompletedTask;
     }
 
@@ -59,6 +58,7 @@ namespace Amazon.Lambda.Hosting
       {
         // read the id of the handler to execute
         Console.Write("> ");
+        
         if (!int.TryParse(Console.ReadLine(), out var option)) continue;
         if (option < 0 || option >= registrations.Length) continue;
 
@@ -67,7 +67,6 @@ namespace Amazon.Lambda.Hosting
         Console.WriteLine($"Executing {registration.HandlerType}");
 
         // TODO: support various types of input here
-
         var result = host.RunLambdaAsync(null, new LocalLambdaContext(registration.FunctionName)).Result;
 
         Console.WriteLine(result);

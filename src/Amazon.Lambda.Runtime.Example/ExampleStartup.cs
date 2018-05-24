@@ -6,7 +6,6 @@ using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
 using JetBrains.Annotations;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -42,15 +41,13 @@ namespace Amazon.Lambda
       {
         services.ConfigureHostingOptions(options =>
         {
-          options.RedirectTable[WellKnownService.S3]     = new Uri("http://localhost:5000/minio");
+          options.AWS.AccessKey = "A1B2C3D4E5";
+          options.AWS.SecretKey = "A1B2C3D4E5";
+          
+          options.RedirectTable[WellKnownService.S3]     = new Uri("http://localhost:9000");
           options.RedirectTable[WellKnownService.Dynamo] = new Uri("http://localhost:8000");
         });
       }
-    }
-
-    [UsedImplicitly]
-    public void Configure(IHostBuilder builder, IHostingEnvironment environment, IConfiguration configuration)
-    {
     }
   }
 }

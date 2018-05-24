@@ -18,12 +18,12 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonDynamoDBConfig();
 
-          if (options.DefaultEndpoint != null) config.RegionEndpoint      = options.DefaultEndpoint;
+          if (options.AWS.DefaultEndpoint != null) config.RegionEndpoint  = options.AWS.DefaultEndpoint;
           if (options.RedirectTable.Contains("dynamo")) config.ServiceURL = options.RedirectTable["dynamo"].ToString();
 
-          if (!string.IsNullOrEmpty(options.AccessKey) || !string.IsNullOrEmpty(options.SecretKey))
+          if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
           {
-            return new AmazonDynamoDBClient(options.AccessKey, options.SecretKey, config);
+            return new AmazonDynamoDBClient(options.AWS.AccessKey, options.AWS.SecretKey, config);
           }
 
           return new AmazonDynamoDBClient(config);

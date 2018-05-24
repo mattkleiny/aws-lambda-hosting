@@ -18,12 +18,12 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonS3Config();
 
-          if (options.DefaultEndpoint != null) config.RegionEndpoint  = options.DefaultEndpoint;
+          if (options.AWS.DefaultEndpoint != null) config.RegionEndpoint  = options.AWS.DefaultEndpoint;
           if (options.RedirectTable.Contains("s3")) config.ServiceURL = options.RedirectTable["s3"].ToString();
           
-          if (!string.IsNullOrEmpty(options.AccessKey) || !string.IsNullOrEmpty(options.SecretKey))
+          if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
           {
-            return new AmazonS3Client(options.AccessKey, options.SecretKey, config);
+            return new AmazonS3Client(options.AWS.AccessKey, options.AWS.SecretKey, config);
           }
 
           return new AmazonS3Client(config);

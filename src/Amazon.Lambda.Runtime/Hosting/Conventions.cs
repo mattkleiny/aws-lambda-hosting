@@ -61,11 +61,13 @@ namespace Amazon.Lambda.Hosting
         method.Invoke(parameters.ToArray());
       }
 
+      // root configuration
       FindCandidateMethods(target)
         .Where(method => "Configure".Equals(method.Method.Name, StringComparison.OrdinalIgnoreCase))
         .Where(method => method.Parameters.All(parameter => parameter.ParameterType != typeof(IServiceCollection)))
         .ForEach(ApplyConfiguration);
 
+      // per-environment configuration
       FindCandidateMethods(target)
         .Where(method => $"Configure{environment.EnvironmentName}".Equals(method.Method.Name, StringComparison.OrdinalIgnoreCase))
         .Where(method => method.Parameters.All(parameter => parameter.ParameterType != typeof(IServiceCollection)))

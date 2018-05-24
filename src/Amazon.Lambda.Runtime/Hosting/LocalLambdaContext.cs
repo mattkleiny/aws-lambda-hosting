@@ -4,7 +4,7 @@ using Amazon.Lambda.Diagnostics;
 
 namespace Amazon.Lambda.Hosting
 {
-  /// <summary>A default <see cref="ILambdaContext"/> for local execution.</summary>
+  /// <summary>A <see cref="ILambdaContext"/> for local execution.</summary>
   public sealed class LocalLambdaContext : ILambdaContext
   {
     public LocalLambdaContext(string functionName)
