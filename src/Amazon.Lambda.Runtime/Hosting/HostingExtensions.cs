@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
@@ -70,7 +73,38 @@ namespace Amazon.Lambda.Hosting
       builder.ConfigureServices(services =>
       {
         services.AddScoped<THandler>();
-        services.AddSingleton(_ => new LambdaHandlerRegistration(functionName, typeof(THandler)));
+        services.AddSingleton(new LambdaHandlerRegistration(functionName, typeof(THandler)));
+      });
+
+      return builder;
+    }
+
+    /// <summary>Maps the functional handlers from the given classes publically accessible <see cref="LambdaFunctionAttribute"/> annotated methods.</summary>
+    public static IHostBuilder WithFunctionalHandlers<THandler>(this IHostBuilder builder)
+      where THandler : class
+    {
+      IEnumerable<string> DiscoverFunctions(IReflect type)
+      {
+        // TODO: share this logic with teh functional dispatcher
+        return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+          .Where(method => method.GetCustomAttribute<LambdaFunctionAttribute>() != null)
+          .Select(method => method.GetCustomAttribute<LambdaFunctionAttribute>().FunctionName);
+      }
+
+      builder.ConfigureServices(services =>
+      {
+        var functions = DiscoverFunctions(typeof(THandler)).ToArray();
+
+        if (functions.Any())
+        {
+          services.AddScoped<THandler>();
+          services.AddScoped<FunctionalDispatcher<THandler>>();
+
+          foreach (var function in functions)
+          {
+            services.AddSingleton(new LambdaHandlerRegistration(function, typeof(FunctionalDispatcher<THandler>)));
+          }
+        }
       });
 
       return builder;
@@ -101,7 +135,7 @@ namespace Amazon.Lambda.Hosting
     public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
     {
       builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
-      
+
       return builder;
     }
 

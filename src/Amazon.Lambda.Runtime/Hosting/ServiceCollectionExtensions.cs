@@ -9,6 +9,8 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Configures the <see cref="HostingOptions"/> for the application.</summary>
     public static IServiceCollection ConfigureHostingOptions(this IServiceCollection services, Action<HostingOptions> configurer)
     {
+      Check.NotNull(configurer, nameof(configurer));
+      
       services.Configure(configurer);
 
       return services;

@@ -7,7 +7,7 @@ namespace Amazon.Lambda.Hosting
   /// Denotes the associated <see cref="ILambdaHandler"/> is mapped to the given Lambda <see cref="FunctionName"/>.
   /// </summary>
   [MeansImplicitUse]
-  [AttributeUsage(AttributeTargets.Class)]
+  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
   public sealed class LambdaFunctionAttribute : Attribute
   {
     public LambdaFunctionAttribute(string functionName)
