@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -83,26 +81,18 @@ namespace Amazon.Lambda.Hosting
     public static IHostBuilder WithFunctionalHandlers<THandler>(this IHostBuilder builder)
       where THandler : class
     {
-      IEnumerable<string> DiscoverFunctions(IReflect type)
-      {
-        // TODO: share this logic with teh functional dispatcher
-        return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-          .Where(method => method.GetCustomAttribute<LambdaFunctionAttribute>() != null)
-          .Select(method => method.GetCustomAttribute<LambdaFunctionAttribute>().FunctionName);
-      }
-
       builder.ConfigureServices(services =>
       {
-        var functions = DiscoverFunctions(typeof(THandler)).ToArray();
+        var functions = FunctionalDispatcher<THandler>.DiscoverFunctions();
 
         if (functions.Any())
         {
           services.AddScoped<THandler>();
-          services.AddScoped<FunctionalDispatcher<THandler>>();
+          services.AddScoped(provider => new FunctionalDispatcher<THandler>(provider.GetRequiredService<IHost>(), functions));
 
           foreach (var function in functions)
           {
-            services.AddSingleton(new LambdaHandlerRegistration(function, typeof(FunctionalDispatcher<THandler>)));
+            services.AddSingleton(new LambdaHandlerRegistration(function.FunctionName, typeof(FunctionalDispatcher<THandler>)));
           }
         }
       });

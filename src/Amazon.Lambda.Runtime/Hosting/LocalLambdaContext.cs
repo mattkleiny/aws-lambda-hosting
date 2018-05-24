@@ -15,10 +15,10 @@ namespace Amazon.Lambda.Hosting
     }
 
     public string           AwsRequestId       { get; } = Guid.NewGuid().ToString();
-    public IClientContext   ClientContext      { get; } = null; // TODO: mock this?
+    public IClientContext   ClientContext      { get; } = null;
     public string           FunctionName       { get; }
     public string           FunctionVersion    { get; } = "Unknown";
-    public ICognitoIdentity Identity           { get; } = null; // TODO: mock this?
+    public ICognitoIdentity Identity           { get; } = null;
     public string           InvokedFunctionArn { get; } = string.Empty;
     public ILambdaLogger    Logger             { get; } = ConsoleLambdaLogger.Instance;
     public string           LogGroupName       { get; } = string.Empty;
