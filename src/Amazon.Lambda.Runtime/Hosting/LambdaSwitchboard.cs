@@ -12,16 +12,20 @@ namespace Amazon.Lambda.Hosting
   {
     private readonly LambdaHandlerRegistration[] registrations;
 
-    private readonly IHost  host;
+    private readonly IHost    host;
+    private readonly string[] cliArgs;
+
     private readonly Thread thread;
 
-    public LambdaSwitchboard(IEnumerable<LambdaHandlerRegistration> registrations, IHost host)
+    public LambdaSwitchboard(IEnumerable<LambdaHandlerRegistration> registrations, IHost host, string[] cliArgs)
     {
       Check.NotNull(registrations, nameof(registrations));
       Check.NotNull(host,          nameof(host));
+      Check.NotNull(cliArgs,       nameof(cliArgs));
 
       this.registrations = registrations.ToArray();
       this.host          = host;
+      this.cliArgs       = cliArgs;
 
       thread = BuildThread();
     }
@@ -44,6 +48,8 @@ namespace Amazon.Lambda.Hosting
     {
       Thread.Sleep(100); // HACK: wait until the rest of the logs have completed
 
+      // TODO: parse and process command line arguments
+
       Console.WriteLine("Welcome to the lambda switchboard.");
       Console.WriteLine("Please make your selection below:");
 
@@ -58,7 +64,7 @@ namespace Amazon.Lambda.Hosting
       {
         // read the id of the handler to execute
         Console.Write("> ");
-        
+
         if (!int.TryParse(Console.ReadLine(), out var option)) continue;
         if (option < 0 || option >= registrations.Length) continue;
 

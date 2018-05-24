@@ -28,7 +28,7 @@ namespace Amazon.Lambda
 
     /// <summary>This is the entry point from the CLI.</summary>
     public static Task Main(string[] args)
-      => HostBuilder.WithLambdaSwitchboard().RunConsoleAsync();
+      => HostBuilder.WithLambdaSwitchboard(args).RunConsoleAsync();
 
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]

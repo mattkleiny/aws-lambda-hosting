@@ -132,9 +132,20 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
-    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
+    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder) => WithLambdaSwitchboard(builder, new string[0]);
+
+    /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
+    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder, string[] cliArgs)
     {
-      builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
+      Check.NotNull(cliArgs, nameof(cliArgs));
+
+      builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>(
+        resolved => new LambdaSwitchboard(
+          registrations: resolved.GetServices<LambdaHandlerRegistration>(),
+          host: resolved.GetRequiredService<IHost>(),
+          cliArgs: cliArgs
+        )
+      ));
 
       return builder;
     }
