@@ -81,19 +81,21 @@ namespace Amazon.Lambda.Hosting
     public static IHostBuilder WithFunctionalHandlers<THandler>(this IHostBuilder builder)
       where THandler : class
     {
+      var functions = FunctionalDispatcher<THandler>.DiscoverFunctions();
+
+      if (!functions.Any())
+      {
+        throw new InvalidOperationException($"The handler ${typeof(THandler)} does not have any valid functional handlers");
+      }
+      
       builder.ConfigureServices(services =>
       {
-        var functions = FunctionalDispatcher<THandler>.DiscoverFunctions();
+        services.AddScoped<THandler>();
+        services.AddScoped(provider => new FunctionalDispatcher<THandler>(provider.GetRequiredService<IHost>(), functions));
 
-        if (functions.Any())
+        foreach (var function in functions)
         {
-          services.AddScoped<THandler>();
-          services.AddScoped(provider => new FunctionalDispatcher<THandler>(provider.GetRequiredService<IHost>(), functions));
-
-          foreach (var function in functions)
-          {
-            services.AddSingleton(new LambdaHandlerRegistration(function.FunctionName, typeof(FunctionalDispatcher<THandler>)));
-          }
+          services.AddSingleton(new LambdaHandlerRegistration(function.FunctionName, typeof(FunctionalDispatcher<THandler>)));
         }
       });
 
