@@ -36,13 +36,13 @@ namespace Amazon.Lambda
       => HostBuilder.RunLambdaAsync(input, context);
     
     [LambdaFunction("lambda-runtime-example-handler-3")]
-    public Task<object> Handler3(object input, AmazonS3Client client)
+    public async Task<object> Handler3(object input, ITestService testService)
     {
-      return Task.FromResult<object>("Hello from Handler 3");
+      return await testService.GetMessageAsync();
     }
 
     [LambdaFunction("lambda-runtime-example-handler-4")]
-    public Task<object> Handler4(object input, AmazonS3Client s3, AmazonDynamoDBClient dynamo)
+    public Task<object> Handler4(object input, AmazonS3Client s3, AmazonDynamoDBClient dynamo, ITestService testService, ILambdaContext context)
     {
       return Task.FromResult<object>("Hello from Handler 4");
     }   
