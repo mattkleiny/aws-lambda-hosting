@@ -71,7 +71,11 @@ namespace Amazon.Lambda.Hosting
       builder.ConfigureServices(services =>
       {
         services.AddScoped<THandler>();
-        services.AddSingleton(new LambdaHandlerRegistration(functionName, typeof(THandler)));
+        services.AddSingleton(new LambdaHandlerRegistration(
+          functionName: functionName,
+          handlerType: typeof(THandler),
+          friendlyName: typeof(THandler).Name
+        ));
       });
 
       return builder;
@@ -87,7 +91,7 @@ namespace Amazon.Lambda.Hosting
       {
         throw new InvalidOperationException($"The handler ${typeof(THandler)} does not have any valid functional handlers");
       }
-      
+
       builder.ConfigureServices(services =>
       {
         services.AddScoped<THandler>();
@@ -95,7 +99,11 @@ namespace Amazon.Lambda.Hosting
 
         foreach (var function in functions)
         {
-          services.AddSingleton(new LambdaHandlerRegistration(function.FunctionName, typeof(FunctionalDispatcher<THandler>)));
+          services.AddSingleton(new LambdaHandlerRegistration(
+            functionName: function.FunctionName,
+            handlerType: typeof(FunctionalDispatcher<THandler>),
+            friendlyName: function.FriendlyName
+          ));
         }
       });
 

@@ -51,7 +51,7 @@ namespace Amazon.Lambda.Hosting
       {
         var registration = registrations[index];
 
-        Console.WriteLine($"[{index}] - {registration.FunctionName} mapped to {registration.HandlerType}");
+        Console.WriteLine($"[{index}] - {registration.FunctionName} mapped to {registration.FriendlyName}");
       }
 
       while (true)
@@ -64,7 +64,7 @@ namespace Amazon.Lambda.Hosting
 
         var registration = registrations[option];
 
-        Console.WriteLine($"Executing {registration.HandlerType}");
+        Console.WriteLine($"Executing {registration.FriendlyName}");
 
         // TODO: support various types of input here
         var result = host.RunLambdaAsync(null, new LocalLambdaContext(registration.FunctionName)).Result;

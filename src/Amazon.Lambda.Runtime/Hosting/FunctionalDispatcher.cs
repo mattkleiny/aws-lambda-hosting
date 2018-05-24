@@ -64,6 +64,7 @@ namespace Amazon.Lambda.Hosting
       }
 
       public string FunctionName { get; }
+      public string FriendlyName => method.Name;
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
       public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services)
