@@ -1,9 +1,9 @@
 ﻿using Amazon.Lambda.Core;
 
-namespace Amazon.Lambda.Diagnostics
+namespace Amazon.Lambda.Internal
 {
-  /// <summary>A no-op <see cref="ILambdaLogger"/> implementation.</summary>
-  public sealed class NullLambdaLogger : ILambdaLogger
+  /// <summary>A no-op <see cref="ILambdaLogger"/> i8mplementation.</summary>
+  internal sealed class NullLambdaLogger : ILambdaLogger
   {
     public static readonly ILambdaLogger Instance = new NullLambdaLogger();
 

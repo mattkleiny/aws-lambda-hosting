@@ -8,7 +8,7 @@ namespace Amazon.Lambda.Hosting
   /// <summary>Extensions for simplifying interaction with DynamoDB.</summary>
   public static class DynamoHostingExtensions
   {
-    /// <summary>Adds <see cref="AmazonDynamoDBClient"/> to the host.</summary>
+    /// <summary>Adds DynamoDB support to the host.</summary>
     public static IHostBuilder UseDynamo(this IHostBuilder builder)
     {
       return builder.ConfigureServices((context, services) =>

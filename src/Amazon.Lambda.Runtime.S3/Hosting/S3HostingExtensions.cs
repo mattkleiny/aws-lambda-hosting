@@ -8,7 +8,7 @@ namespace Amazon.Lambda.Hosting
   /// <summary>Extensions for simplifying interaction with S3.</summary>
   public static class S3HostingExtensions
   {
-    /// <summary>Adds <see cref="AmazonS3Client"/> to the host.</summary>
+    /// <summary>Adds S3 support to the host.</summary>
     public static IHostBuilder UseS3(this IHostBuilder builder)
     {
       return builder.ConfigureServices((context, services) =>

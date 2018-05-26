@@ -1,10 +1,10 @@
 ﻿using System;
 using Amazon.Lambda.Core;
 
-namespace Amazon.Lambda.Diagnostics
+namespace Amazon.Lambda.Internal
 {
   /// <summary>A <see cref="ILambdaLogger"/> that forwards to the local console.</summary>
-  public sealed class ConsoleLambdaLogger : ILambdaLogger
+  internal sealed class ConsoleLambdaLogger : ILambdaLogger
   {
     public static readonly ILambdaLogger Instance = new ConsoleLambdaLogger();
 

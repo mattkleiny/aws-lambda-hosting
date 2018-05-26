@@ -4,8 +4,9 @@
   public enum WellKnownService
   {
     Dynamo,
+    ElastiCache,
     S3,
-    SQS,
     SNS,
+    SQS,
   }
 }

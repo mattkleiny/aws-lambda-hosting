@@ -47,10 +47,11 @@ namespace Amazon.Lambda.Services
     {
       switch (service)
       {
-        case WellKnownService.Dynamo: return "dynamo";
-        case WellKnownService.S3:     return "s3";
-        case WellKnownService.SNS:    return "sns";
-        case WellKnownService.SQS:    return "sqs";
+        case WellKnownService.Dynamo:      return "dynamo";
+        case WellKnownService.ElastiCache: return "elasticache";
+        case WellKnownService.S3:          return "s3";
+        case WellKnownService.SNS:         return "sns";
+        case WellKnownService.SQS:         return "sqs";
 
         default:
           throw new ArgumentException($"An unrecognized service was provided: {service}");
