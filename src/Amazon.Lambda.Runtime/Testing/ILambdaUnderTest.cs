@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
@@ -13,8 +14,9 @@ namespace Amazon.Lambda.Testing
   public interface ILambdaUnderTest<out THandler>
     where THandler : class, ILambdaHandler
   {
-    ILambdaContext Context { get; }
-    THandler       Handler { get; }
+    ILambdaContext   Context  { get; }
+    THandler         Handler  { get; }
+    IServiceProvider Services { get; }
 
     Task<object> ExecuteAsync(object input, CancellationToken token = default);
   }

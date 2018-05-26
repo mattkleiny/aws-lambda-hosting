@@ -15,7 +15,7 @@ namespace Amazon.Lambda.Testing
 
       configurer(context);
 
-      return new LambdaUnderTest<THandler>(context, target.Handler);
+      return new LambdaUnderTest<THandler>(context, target.Handler, target.Services);
     }
   }
 }

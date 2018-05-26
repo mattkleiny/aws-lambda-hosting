@@ -28,7 +28,7 @@ namespace Amazon.Lambda.Testing
       var context = new TestLambdaContext();
       var handler = host.Services.GetService<THandler>();
 
-      return new LambdaUnderTest<THandler>(context, handler);
+      return new LambdaUnderTest<THandler>(context, handler, host.Services);
     }
 
     public void Dispose()
