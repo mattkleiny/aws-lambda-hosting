@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -15,6 +16,7 @@ namespace Amazon.Lambda.Hosting
   {
     private readonly IHost            host;
     private readonly TargetFunction[] functions;
+    private readonly MatchingStrategy isMatch;
 
     /// <summary>Discovers all of the <see cref="TargetFunction"/>s associated with <see cref="THandler"/>.</summary>
     public static TargetFunction[] DiscoverFunctions() => typeof(THandler)
@@ -23,13 +25,15 @@ namespace Amazon.Lambda.Hosting
       .Select(method => new TargetFunction(method, method.GetCustomAttribute<LambdaFunctionAttribute>().FunctionName))
       .ToArray();
 
-    public FunctionalDispatcher(IHost host, TargetFunction[] functions)
+    public FunctionalDispatcher(IHost host, IOptions<HostingOptions> hostingOptions, TargetFunction[] functions)
     {
       Check.NotNull(host,      nameof(host));
       Check.NotNull(functions, nameof(functions));
 
       this.host      = host;
       this.functions = functions;
+
+      isMatch = hostingOptions.Value.MatchingStrategy;
     }
 
     public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token)
@@ -38,7 +42,7 @@ namespace Amazon.Lambda.Hosting
 
       foreach (var function in functions)
       {
-        if (context.FunctionName.Equals(function.FunctionName, StringComparison.OrdinalIgnoreCase))
+        if (isMatch(function.Registration, input, context))
         {
           return function.Invoke(input, context, host.Services, token);
         }
@@ -62,10 +66,19 @@ namespace Amazon.Lambda.Hosting
         parameters  = method.GetParameters().ToArray();
 
         FunctionName = functionName;
+
+        Registration = new LambdaHandlerRegistration(
+          functionName: functionName,
+          typeof(THandler),
+          friendlyName: method.Name
+        );
       }
 
       public string FunctionName { get; }
       public string FriendlyName => method.Name;
+
+      /// <summary>A <see cref="LambdaHandlerRegistration"/> just to keep the matching strategies consistent.</summary>
+      internal LambdaHandlerRegistration Registration { get; }
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
       public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken token)

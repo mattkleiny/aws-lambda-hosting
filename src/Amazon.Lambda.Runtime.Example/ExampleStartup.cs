@@ -35,13 +35,13 @@ namespace Amazon.Lambda
     public static Task<object> ExecuteAsync(object input, ILambdaContext context)
       => HostBuilder.RunLambdaAsync(input, context);
     
-    [LambdaFunction("lambda-runtime-example-handler-3")]
+    [LambdaFunction("handler-3")]
     public async Task<object> Handler3(object input, ITestService testService)
     {
       return await testService.GetMessageAsync();
     }
 
-    [LambdaFunction("lambda-runtime-example-handler-4")]
+    [LambdaFunction("handler-4")]
     public Task<object> Handler4(object input, AmazonS3Client s3, AmazonDynamoDBClient dynamo, ITestService testService, ILambdaContext context)
     {
       return Task.FromResult<object>("Hello from Handler 4");
@@ -56,6 +56,8 @@ namespace Amazon.Lambda
       {
         services.ConfigureHostingOptions(options =>
         {
+          options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix(StringComparison.OrdinalIgnoreCase);
+          
           options.AWS.AccessKey = "A1B2C3D4E5";
           options.AWS.SecretKey = "A1B2C3D4E5";
 

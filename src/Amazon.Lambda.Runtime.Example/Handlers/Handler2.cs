@@ -6,7 +6,7 @@ using Amazon.Lambda.Hosting;
 
 namespace Amazon.Lambda.Handlers
 {
-  [LambdaFunction("lambda-runtime-example-handler-2")]
+  [LambdaFunction("handler-2")]
   public sealed class Handler2 : ILambdaHandler
   {
     private readonly AmazonDynamoDBClient client;

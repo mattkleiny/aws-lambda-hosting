@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -96,12 +97,16 @@ namespace Amazon.Lambda.Hosting
       builder.ConfigureServices(services =>
       {
         services.AddScoped<THandler>();
-        services.AddScoped(provider => new FunctionalDispatcher<THandler>(provider.GetRequiredService<IHost>(), functions));
+        services.AddScoped(provider => new FunctionalDispatcher<THandler>(
+          host: provider.GetRequiredService<IHost>(),
+          hostingOptions: provider.GetRequiredService<IOptions<HostingOptions>>(),
+          functions: functions
+        ));
 
         foreach (var function in functions)
         {
           services.AddSingleton(new LambdaHandlerRegistration(
-            functionName: function.FunctionName,
+            function.FunctionName,
             handlerType: typeof(FunctionalDispatcher<THandler>),
             friendlyName: function.FriendlyName
           ));
@@ -137,25 +142,26 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(context, nameof(context));
 
-      return services.ResolveLambdaHandler(context.FunctionName);
+      return services.ResolveLambdaHandler(null, context);
     }
 
-    /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given <see cref="functionName"/>.</summary>
-    public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, string functionName)
+    /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given context.</summary>
+    public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, object input, ILambdaContext context)
     {
-      Check.NotNullOrEmpty(functionName, nameof(functionName));
+      Check.NotNull(context, nameof(context));
 
       var registrations = services.GetServices<LambdaHandlerRegistration>();
+      var isMatch       = services.GetRequiredService<IOptions<HostingOptions>>().Value.MatchingStrategy;
 
       foreach (var registration in registrations)
       {
-        if (registration.FunctionName.Equals(functionName, StringComparison.OrdinalIgnoreCase))
+        if (isMatch(registration, input, context))
         {
           return (ILambdaHandler) services.GetService(registration.HandlerType);
         }
       }
 
-      throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {functionName}");
+      throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
     }
   }
 }

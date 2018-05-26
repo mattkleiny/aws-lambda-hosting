@@ -6,7 +6,7 @@ using Amazon.S3;
 
 namespace Amazon.Lambda.Handlers
 {
-  [LambdaFunction("lambda-runtime-example-handler-1")]
+  [LambdaFunction("handler-1")]
   public sealed class Handler1 : ILambdaHandler
   {
     private readonly AmazonS3Client client;
