@@ -4,11 +4,11 @@
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>Support for SQS auto-configuration.</Description>
   </PropertyGroup>
+  <Import Project="../../Shared.props" />
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.SQS" Version="3.3.3.7" />
   </ItemGroup>
-  <Import Project="../../Shared.props" />
 </Project>

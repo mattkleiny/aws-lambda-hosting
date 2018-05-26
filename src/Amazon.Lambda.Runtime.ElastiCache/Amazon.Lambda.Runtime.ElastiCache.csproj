@@ -4,11 +4,11 @@
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>Support for ElastiCache auto-configuration.</Description>
   </PropertyGroup>
+  <Import Project="../../Shared.props" />
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.ElastiCache" Version="3.3.5.6" />
   </ItemGroup>
-  <Import Project="../../Shared.props" />
 </Project>

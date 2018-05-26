@@ -4,6 +4,7 @@
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>Support for S3 auto-configuration.</Description>
   </PropertyGroup>
+  <Import Project="../../Shared.props" />
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
@@ -11,5 +12,4 @@
     <PackageReference Include="Amazon.Lambda.S3Events" Version="1.0.2" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.18.2" />
   </ItemGroup>
-  <Import Project="../../Shared.props" />
 </Project>

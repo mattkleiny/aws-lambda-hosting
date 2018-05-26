@@ -4,11 +4,11 @@
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>A set of extensions for running runtime based functions from the CLI.</Description>
   </PropertyGroup>
+  <Import Project="../../Shared.props" />
   <ItemGroup>
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
-  <Import Project="../../Shared.props" />
 </Project>
