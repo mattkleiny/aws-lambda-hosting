@@ -8,6 +8,6 @@ namespace Amazon.Lambda.Hosting
   public interface ILambdaHandler
   {
     /// <summary>Executes the handler asynchronously with the given input and context.</summary>
-    Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token = default);
+    Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken = default);
   }
 }

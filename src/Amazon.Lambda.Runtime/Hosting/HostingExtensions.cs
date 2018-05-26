@@ -117,24 +117,24 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
-    public static async Task<object> RunLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context, CancellationToken token = default)
+    public static async Task<object> RunLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context, CancellationToken cancellationToken = default)
     {
       Check.NotNull(context, nameof(context));
 
       using (var host = builder.Build())
       {
-        return await host.RunLambdaAsync(input, context, token);
+        return await host.RunLambdaAsync(input, context, cancellationToken);
       }
     }
 
     /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
-    public static async Task<object> RunLambdaAsync(this IHost host, object input, ILambdaContext context, CancellationToken token = default)
+    public static async Task<object> RunLambdaAsync(this IHost host, object input, ILambdaContext context, CancellationToken cancellationToken = default)
     {
       Check.NotNull(context, nameof(context));
 
       var handler = host.Services.ResolveLambdaHandler(context);
 
-      return await handler.ExecuteAsync(input, context, token);
+      return await handler.ExecuteAsync(input, context, cancellationToken);
     }
 
     /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given <see cref="ILambdaContext"/>.</summary>

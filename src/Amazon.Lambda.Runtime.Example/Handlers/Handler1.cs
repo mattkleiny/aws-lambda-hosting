@@ -18,7 +18,7 @@ namespace Amazon.Lambda.Runtime.Example.Handlers
       this.client = client;
     }
 
-    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token)
+    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
       return Task.FromResult<object>($"S3 configured with {client.Config.ServiceURL}");
     }

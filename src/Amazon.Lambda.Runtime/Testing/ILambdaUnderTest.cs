@@ -18,6 +18,6 @@ namespace Amazon.Lambda.Testing
     THandler         Handler  { get; }
     IServiceProvider Services { get; }
 
-    Task<object> ExecuteAsync(object input, CancellationToken token = default);
+    Task<object> ExecuteAsync(object input, CancellationToken cancellationToken = default);
   }
 }

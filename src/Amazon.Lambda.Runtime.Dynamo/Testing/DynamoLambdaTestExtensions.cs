@@ -10,7 +10,7 @@ namespace Amazon.Lambda.Testing
   public static class DynamoLambdaTestExtensions
   {
     /// <summary>Sends a <see cref="DynamoDBEvent"/> to the <see cref="ILambdaUnderTest{THandler}"/> with a default notification.</summary>
-    public static Task<object> SendDynamoEventAsync<THandler>(this ILambdaUnderTest<THandler> target, CancellationToken token = default)
+    public static Task<object> SendDynamoEventAsync<THandler>(this ILambdaUnderTest<THandler> target, CancellationToken cancellationToken = default)
       where THandler : class, ILambdaHandler
     {
       throw new NotImplementedException();

@@ -25,9 +25,9 @@ namespace Amazon.Lambda.Testing
     public THandler         Handler  { get; }
     public IServiceProvider Services { get; }
 
-    public Task<object> ExecuteAsync(object input, CancellationToken token)
+    public Task<object> ExecuteAsync(object input, CancellationToken cancellationToken)
     {
-      return Handler.ExecuteAsync(input, Context, token);
+      return Handler.ExecuteAsync(input, Context, cancellationToken);
     }
   }
 }

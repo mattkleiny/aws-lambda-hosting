@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
   public static class ConsoleHostingExtensions
   {
     /// <summary>Runs a the lambda host application with the given command line arguments.</summary>
-    public static Task<int> RunLambdaConsoleAsync(this IHostBuilder builder, string[] args, CancellationToken token = default)
+    public static Task<int> RunLambdaConsoleAsync(this IHostBuilder builder, string[] args, CancellationToken cancellationToken = default)
     {
       Check.NotNull(args, nameof(args));
 
@@ -27,7 +27,7 @@ namespace Amazon.Lambda.Hosting
         {
           builder.WithLambdaSwitchboard();
 
-          await builder.RunConsoleAsync(token);
+          await builder.RunConsoleAsync(cancellationToken);
         });
       });
 
@@ -43,7 +43,7 @@ namespace Amazon.Lambda.Hosting
           var function = functionOption.Value;
           var input    = inputOption.Value();
 
-          var output = await builder.RunLambdaAsync(input, new LocalLambdaContext(function), token);
+          var output = await builder.RunLambdaAsync(input, new LocalLambdaContext(function), cancellationToken);
 
           if (output != null)
           {
@@ -56,7 +56,7 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
-    private static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
+    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
     {
       return builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
     }

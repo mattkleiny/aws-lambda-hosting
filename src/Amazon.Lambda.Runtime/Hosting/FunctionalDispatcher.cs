@@ -36,7 +36,7 @@ namespace Amazon.Lambda.Hosting
       isMatch = hostingOptions.Value.MatchingStrategy;
     }
 
-    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token)
+    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
       Check.NotNull(context, nameof(context));
 
@@ -44,7 +44,7 @@ namespace Amazon.Lambda.Hosting
       {
         if (isMatch(function.Registration, input, context))
         {
-          return function.Invoke(input, context, host.Services, token);
+          return function.Invoke(input, context, host.Services, cancellationToken);
         }
       }
 
@@ -81,7 +81,7 @@ namespace Amazon.Lambda.Hosting
       internal LambdaHandlerRegistration Registration { get; }
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
-      public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken token)
+      public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
       {
         IEnumerable<object> PopulateParameters()
         {
@@ -91,7 +91,7 @@ namespace Amazon.Lambda.Hosting
             else if ("input".Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)) yield return input;
             else if (parameter.ParameterType == typeof(ILambdaContext)) yield return context;
             else if (parameter.ParameterType == typeof(IServiceProvider)) yield return services;
-            else if (parameter.ParameterType == typeof(CancellationToken)) yield return token;
+            else if (parameter.ParameterType == typeof(CancellationToken)) yield return cancellationToken;
             else yield return services.GetRequiredService(parameter.ParameterType);
           }
         }

@@ -12,8 +12,7 @@ namespace Amazon.Lambda.Hosting
   {
     private readonly LambdaHandlerRegistration[] registrations;
 
-    private readonly IHost  host;
-    private readonly Thread thread;
+    private readonly IHost host;
 
     public LambdaSwitchboard(IEnumerable<LambdaHandlerRegistration> registrations, IHost host)
     {
@@ -22,13 +21,11 @@ namespace Amazon.Lambda.Hosting
 
       this.registrations = registrations.ToArray();
       this.host          = host;
-
-      thread = BuildThread();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-      thread.Start();
+      Task.Run(() => RunSwitchboard(cancellationToken), cancellationToken);
 
       return Task.CompletedTask;
     }
@@ -40,7 +37,7 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Builds the main <see cref="Thread"/> for executing the switchboard.</summary>
-    private Thread BuildThread() => new Thread(() =>
+    private async Task RunSwitchboard(CancellationToken cancellationToken = default)
     {
       Thread.Sleep(100); // HACK: wait until the rest of the logs have completed
 
@@ -54,7 +51,7 @@ namespace Amazon.Lambda.Hosting
         Console.WriteLine($"[{index}] - {registration.FunctionName} mapped to {registration.FriendlyName}");
       }
 
-      while (true)
+      while (!cancellationToken.IsCancellationRequested)
       {
         // read the id of the handler to execute
         Console.Write("> ");
@@ -68,11 +65,11 @@ namespace Amazon.Lambda.Hosting
 
         // TODO: support various types of input here
         // TODO: support cancellation of long-running invocations here
-        
-        var result = host.RunLambdaAsync(null, new LocalLambdaContext(registration.FunctionName)).Result;
+
+        var result = await host.RunLambdaAsync(null, new LocalLambdaContext(registration.FunctionName), cancellationToken);
 
         Console.WriteLine(result);
       }
-    }) {IsBackground = true};
+    }
   }
 }

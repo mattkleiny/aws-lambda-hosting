@@ -14,14 +14,14 @@ namespace Amazon.Lambda.Testing
   public static class S3LambdaTestExtensions
   {
     /// <summary>Sends an <see cref="S3Event"/> to the <see cref="ILambdaUnderTest{THandler}"/> with a default notification.</summary>
-    public static Task<object> SendS3EventAsync<THandler>(this ILambdaUnderTest<THandler> target, CancellationToken token = default)
+    public static Task<object> SendS3EventAsync<THandler>(this ILambdaUnderTest<THandler> target, CancellationToken cancellationToken = default)
       where THandler : class, ILambdaHandler
     {
-      return target.SendS3EventAsync(_ => { }, token);
+      return target.SendS3EventAsync(_ => { }, cancellationToken);
     }
 
     /// <summary>Sends an <see cref="S3Event"/> to the <see cref="ILambdaUnderTest{THandler}"/> with a customizable <see cref="S3EventNotification"/>.</summary>
-    public static async Task<object> SendS3EventAsync<THandler>(this ILambdaUnderTest<THandler> target, Action<S3EventNotification> customizer, CancellationToken token = default)
+    public static async Task<object> SendS3EventAsync<THandler>(this ILambdaUnderTest<THandler> target, Action<S3EventNotification> customizer, CancellationToken cancellationToken = default)
       where THandler : class, ILambdaHandler
     {
       var region = target.Services.GetService<IOptions<HostingOptions>>()?.Value?.AWS?.DefaultEndpoint;
@@ -38,7 +38,7 @@ namespace Amazon.Lambda.Testing
         }
       };
 
-      return await target.ExecuteAsync(@event, token);
+      return await target.ExecuteAsync(@event, cancellationToken);
     }
   }
 }
