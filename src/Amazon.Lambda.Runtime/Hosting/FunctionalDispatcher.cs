@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ namespace Amazon.Lambda.Hosting
       this.functions = functions;
     }
 
-    public Task<object> ExecuteAsync(object input, ILambdaContext context)
+    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token)
     {
       Check.NotNull(context, nameof(context));
 
@@ -39,7 +40,7 @@ namespace Amazon.Lambda.Hosting
       {
         if (context.FunctionName.Equals(function.FunctionName, StringComparison.OrdinalIgnoreCase))
         {
-          return function.Invoke(input, context, host.Services);
+          return function.Invoke(input, context, host.Services, token);
         }
       }
 
@@ -67,7 +68,7 @@ namespace Amazon.Lambda.Hosting
       public string FriendlyName => method.Name;
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
-      public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services)
+      public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken token)
       {
         IEnumerable<object> PopulateParameters()
         {
@@ -76,6 +77,7 @@ namespace Amazon.Lambda.Hosting
             if (parameter.ParameterType      == typeof(object)) yield return input;
             else if (parameter.ParameterType == typeof(ILambdaContext)) yield return context;
             else if (parameter.ParameterType == typeof(IServiceProvider)) yield return services;
+            else if (parameter.ParameterType == typeof(CancellationToken)) yield return token;
             else yield return services.GetRequiredService(parameter.ParameterType);
           }
         }

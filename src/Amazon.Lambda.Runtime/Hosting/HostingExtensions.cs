@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,43 +112,36 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
-    public static async Task<object> RunLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context)
+    public static async Task<object> RunLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context, CancellationToken token = default)
     {
       Check.NotNull(context, nameof(context));
 
       using (var host = builder.Build())
       {
-        return await host.RunLambdaAsync(input, context);
+        return await host.RunLambdaAsync(input, context, token);
       }
     }
 
     /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
-    public static async Task<object> RunLambdaAsync(this IHost host, object input, ILambdaContext context)
+    public static async Task<object> RunLambdaAsync(this IHost host, object input, ILambdaContext context, CancellationToken token = default)
     {
       Check.NotNull(context, nameof(context));
 
       var handler = host.Services.ResolveLambdaHandler(context);
 
-      return await handler.ExecuteAsync(input, context);
+      return await handler.ExecuteAsync(input, context, token);
+    }
+
+    /// <summary>Runs a command line application using the given console arguments.</summary>
+    public static async Task<object> RunConsoleAsync(this IHostBuilder builder, string[] args, CancellationToken token = default)
+    {
+      throw new NotImplementedException();
     }
 
     /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
-    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder) => WithLambdaSwitchboard(builder, new string[0]);
-
-    /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
-    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder, string[] cliArgs)
+    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
     {
-      Check.NotNull(cliArgs, nameof(cliArgs));
-
-      builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>(
-        resolved => new LambdaSwitchboard(
-          registrations: resolved.GetServices<LambdaHandlerRegistration>(),
-          host: resolved.GetRequiredService<IHost>(),
-          cliArgs: cliArgs
-        )
-      ));
-
-      return builder;
+      return builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
     }
 
     /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given <see cref="ILambdaContext"/>.</summary>

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
 using Amazon.S3;
@@ -17,7 +18,7 @@ namespace Amazon.Lambda.Handlers
       this.client = client;
     }
 
-    public Task<object> ExecuteAsync(object input, ILambdaContext context)
+    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token)
     {
       return Task.FromResult<object>($"S3 configured with {client.Config.ServiceURL}");
     }

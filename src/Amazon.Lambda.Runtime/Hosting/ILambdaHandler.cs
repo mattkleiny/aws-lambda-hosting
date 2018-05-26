@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 
 namespace Amazon.Lambda.Hosting
@@ -7,6 +8,6 @@ namespace Amazon.Lambda.Hosting
   public interface ILambdaHandler
   {
     /// <summary>Executes the handler asynchronously with the given input and context.</summary>
-    Task<object> ExecuteAsync(object input, ILambdaContext context);
+    Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken token = default);
   }
 }

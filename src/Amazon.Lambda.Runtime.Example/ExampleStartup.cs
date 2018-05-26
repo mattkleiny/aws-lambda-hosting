@@ -28,7 +28,7 @@ namespace Amazon.Lambda
 
     /// <summary>This is the entry point from the CLI.</summary>
     public static Task Main(string[] args)
-      => HostBuilder.WithLambdaSwitchboard(args).RunConsoleAsync();
+      => HostBuilder.WithLambdaSwitchboard().RunConsoleAsync(args);
 
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]
@@ -45,7 +45,7 @@ namespace Amazon.Lambda
     public Task<object> Handler4(object input, AmazonS3Client s3, AmazonDynamoDBClient dynamo, ITestService testService, ILambdaContext context)
     {
       return Task.FromResult<object>("Hello from Handler 4");
-    }   
+    }
 
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
