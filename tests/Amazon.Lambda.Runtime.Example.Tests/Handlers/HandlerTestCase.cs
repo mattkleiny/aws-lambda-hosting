@@ -10,7 +10,7 @@ namespace Amazon.Lambda.Runtime.Example.Tests.Handlers
   {
     /// <summary>A configured <see cref="LambdaTestFixture"/> for the application.</summary>
     public LambdaTestFixture Fixture { get; } = new LambdaTestFixture(
-      ExampleStartup.HostBuilder.ConfigureServices(services =>
+      Startup.HostBuilder.ConfigureServices(services =>
       {
         // test-specific hosting options
         services.ConfigureHostingOptions(options =>

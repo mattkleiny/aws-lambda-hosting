@@ -7,5 +7,5 @@
     "function-memory-size": 128,
     "function-timeout": 30,
     "function-handler": "Amazon.Lambda.Runtime.Example::Amazon.Lambda.Startup::ExecuteAsync",
-    "function-name": "lambda-runtime-example-handler-1"
+    "function-name": "lambda-runtime-example-servicestack-handler-1"
 }

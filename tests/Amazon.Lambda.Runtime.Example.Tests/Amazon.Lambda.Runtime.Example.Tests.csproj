@@ -13,6 +13,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.Example\Amazon.Lambda.Runtime.Example.csproj" />
-    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
 </Project>

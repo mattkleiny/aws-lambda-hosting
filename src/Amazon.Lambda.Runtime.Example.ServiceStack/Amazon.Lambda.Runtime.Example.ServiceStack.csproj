@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>Amazon.Lambda</RootNamespace>
+    <Description>An example application of the Amazon.Lambda runtime along with ServiceSTack.</Description>
+    <IsPackable>False</IsPackable>
+  </PropertyGroup>
+  <Import Project="../../Shared.props" />
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.Aws.Core" Version="5.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj" />
+    <ProjectReference Include="..\Amazon.Lambda.Runtime.Dynamo\Amazon.Lambda.Runtime.Dynamo.csproj" />
+    <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.3" />
+  </ItemGroup>
+</Project>

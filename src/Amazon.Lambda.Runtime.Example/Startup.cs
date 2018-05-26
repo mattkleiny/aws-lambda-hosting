@@ -15,16 +15,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace Amazon.Lambda
 {
-  public sealed class ExampleStartup
+  public sealed class Startup
   {
     /// <summary>The <see cref="IHostBuilder"/> for this example.</summary>
     public static IHostBuilder HostBuilder => new HostBuilder()
-      .UseStartup<ExampleStartup>()
+      .UseStartup<Startup>()
       .UseS3()
       .UseDynamo()
       .WithHandler<Handler1>()
       .WithHandler<Handler2>()
-      .WithFunctionalHandlers<ExampleStartup>();
+      .WithFunctionalHandlers<Startup>();
 
     /// <summary>This is the entry point from the CLI.</summary>
     public static Task<int> Main(string[] args)
@@ -34,7 +34,7 @@ namespace Amazon.Lambda
     [UsedImplicitly]
     public static Task<object> ExecuteAsync(object input, ILambdaContext context)
       => HostBuilder.RunLambdaAsync(input, context);
-    
+
     [LambdaFunction("handler-3")]
     public async Task<object> Handler3(object input, ITestService testService)
     {
@@ -57,7 +57,7 @@ namespace Amazon.Lambda
         services.ConfigureHostingOptions(options =>
         {
           options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix(StringComparison.OrdinalIgnoreCase);
-          
+
           options.AWS.AccessKey = "A1B2C3D4E5";
           options.AWS.SecretKey = "A1B2C3D4E5";
 
