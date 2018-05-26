@@ -9,12 +9,12 @@ namespace Amazon.Lambda.Handlers
   [LambdaFunction("handler-2")]
   public sealed class Handler2 : ILambdaHandler
   {
-    private readonly AmazonDynamoDBClient client;
+    private readonly IAmazonDynamoDB client;
 
-    public Handler2(AmazonDynamoDBClient client)
+    public Handler2(IAmazonDynamoDB client)
     {
       Check.NotNull(client, nameof(client));
-      
+
       this.client = client;
     }
 

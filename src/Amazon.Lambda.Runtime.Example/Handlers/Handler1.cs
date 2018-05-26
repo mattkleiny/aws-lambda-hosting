@@ -9,9 +9,9 @@ namespace Amazon.Lambda.Handlers
   [LambdaFunction("handler-1")]
   public sealed class Handler1 : ILambdaHandler
   {
-    private readonly AmazonS3Client client;
+    private readonly IAmazonS3 client;
 
-    public Handler1(AmazonS3Client client)
+    public Handler1(IAmazonS3 client)
     {
       Check.NotNull(client, nameof(client));
 

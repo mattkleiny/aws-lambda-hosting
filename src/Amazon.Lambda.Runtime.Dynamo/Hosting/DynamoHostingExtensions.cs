@@ -13,7 +13,7 @@ namespace Amazon.Lambda.Hosting
     {
       return builder.ConfigureServices((context, services) =>
       {
-        services.AddScoped(provider =>
+        services.AddScoped<IAmazonDynamoDB>(provider =>
         {
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonDynamoDBConfig();

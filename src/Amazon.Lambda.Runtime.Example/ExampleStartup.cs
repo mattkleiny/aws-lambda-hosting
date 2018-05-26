@@ -42,7 +42,7 @@ namespace Amazon.Lambda
     }
 
     [LambdaFunction("handler-4")]
-    public Task<object> Handler4(object input, AmazonS3Client s3, AmazonDynamoDBClient dynamo, ITestService testService, ILambdaContext context)
+    public Task<object> Handler4(object input, IAmazonS3 s3, IAmazonDynamoDB dynamo, ITestService testService, ILambdaContext context)
     {
       return Task.FromResult<object>("Hello from Handler 4");
     }

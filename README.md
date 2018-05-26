@@ -5,8 +5,7 @@ A mechanism for bootstrapping and integration testing .NET Core based AWS Lambda
 
 Features:
 
-* The ability to bootstrap lambda functions either in-situ (from abitrary code), from a test case or from the AWS Lambda
-  environment.
+* The ability to bootstrap lambda functions either in-situ (from abitrary code), from a test case or from the AWS Lambda environment.
 * Configuration mechanisms using ASP.NET Core's [Generic Host Builder](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1); 
   this aids in familiarity and reducing the conceptual weight of the project.
 * Managed configuration for common AWS services; e.g. S3, Dynamo, CloudWatch, Kinesis, etc. This will allow for a very 
