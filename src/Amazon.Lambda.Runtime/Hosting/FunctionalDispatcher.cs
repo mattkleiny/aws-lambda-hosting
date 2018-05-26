@@ -99,12 +99,18 @@ namespace Amazon.Lambda.Hosting
         var handler = services.GetRequiredService<THandler>();
         var result  = method.Invoke(handler, PopulateParameters().ToArray());
 
-        if (result is Task<object> task)
+        switch (result)
         {
-          return task;
-        }
+          case Task<object> task:
+            return task;
 
-        return Task.FromResult(result);
+          case Task task:
+            task.Wait(cancellationToken);
+            return null;
+
+          default:
+            return Task.FromResult(result);
+        }
       }
     }
   }
