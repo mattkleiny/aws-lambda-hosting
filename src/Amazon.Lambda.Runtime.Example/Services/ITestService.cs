@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Amazon.Lambda.Services
+namespace Amazon.Lambda.Runtime.Example.Services
 {
   public interface ITestService
   {

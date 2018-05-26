@@ -4,7 +4,7 @@ using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
 
-namespace Amazon.Lambda.Handlers
+namespace Amazon.Lambda.Runtime.Example.Handlers
 {
   [LambdaFunction("handler-2")]
   public sealed class Handler2 : ILambdaHandler

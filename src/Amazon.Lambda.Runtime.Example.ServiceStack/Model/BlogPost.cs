@@ -1,6 +1,6 @@
 ﻿using ServiceStack.DataAnnotations;
 
-namespace Amazon.Lambda.Model
+namespace Amazon.Lambda.Runtime.Example.ServiceStack.Model
 {
   [Alias("BlogPosts")]
   public sealed class BlogPost

@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
-using Amazon.Lambda.Handlers;
 using Amazon.Lambda.Hosting;
+using Amazon.Lambda.Runtime.Example.Handlers;
+using Amazon.Lambda.Runtime.Example.Services;
 using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
 using Amazon.S3;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 
 [assembly: LambdaSerializer(typeof(JsonSerializer))]
 
-namespace Amazon.Lambda
+namespace Amazon.Lambda.Runtime.Example
 {
   public sealed class Startup
   {

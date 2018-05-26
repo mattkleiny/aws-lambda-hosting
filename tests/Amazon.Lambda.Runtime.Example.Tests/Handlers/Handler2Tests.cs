@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Amazon.Lambda.Handlers;
+using Amazon.Lambda.Runtime.Example.Handlers;
 using Xunit;
 
 namespace Amazon.Lambda.Runtime.Example.Tests.Handlers

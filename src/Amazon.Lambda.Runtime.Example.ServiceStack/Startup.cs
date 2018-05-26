@@ -3,14 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
-using Amazon.Lambda.Model;
+using Amazon.Lambda.Runtime.Example.ServiceStack.Model;
+using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceStack.Aws.DynamoDb;
 
-namespace Amazon.Lambda
+[assembly: LambdaSerializer(typeof(JsonSerializer))]
+
+namespace Amazon.Lambda.Runtime.Example.ServiceStack
 {
   public sealed class Startup
   {
@@ -45,44 +48,35 @@ namespace Amazon.Lambda
     {
       services.AddScoped<IPocoDynamo, PocoDynamo>();
 
-      if (environment.IsDevelopment())
+      services.ConfigureHostingOptions(options =>
       {
-        services.ConfigureHostingOptions(options =>
-        {
-          options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix(StringComparison.OrdinalIgnoreCase);
+        options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix(StringComparison.OrdinalIgnoreCase);
 
+        if (environment.IsDevelopment())
+        {
           options.AWS.AccessKey = "A1B2C3D4E5";
           options.AWS.SecretKey = "A1B2C3D4E5";
 
           options.RedirectTable[WellKnownService.Dynamo] = new Uri("http://localhost:8000");
-        });
-      }
+        }
+      });
     }
 
     [UsedImplicitly]
-    public void Configure(IPocoDynamo dynamo)
+    public void Configure(IPocoDynamo dynamo, IHostingEnvironment environment)
     {
       dynamo.RegisterTable<BlogPost>();
-    }
-
-    [UsedImplicitly]
-    public void ConfigureDevelopment(IPocoDynamo dynamo)
-    {
-      dynamo.DeleteAllTables();
       dynamo.InitSchema();
 
-      dynamo.PutItems(Enumerable.Range(0, 100).Select(i => new BlogPost
+      if (environment.IsDevelopment())
       {
-        Title = $"Post {i}",
-        Slug  = $"post-{i}",
-        Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut elit nunc. Donec lacinia nisl non molestie gravida."
-      }));
-    }
-
-    [UsedImplicitly]
-    public void ConfigureProduction(IPocoDynamo dynamo)
-    {
-      dynamo.InitSchema();
+        dynamo.PutItems(Enumerable.Range(0, 100).Select(i => new BlogPost
+        {
+          Title = $"Post {i}",
+          Slug  = $"post-{i}",
+          Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut elit nunc. Donec lacinia nisl non molestie gravida."
+        }));
+      }
     }
   }
 }

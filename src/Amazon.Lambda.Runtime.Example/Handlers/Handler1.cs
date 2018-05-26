@@ -4,7 +4,7 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
 using Amazon.S3;
 
-namespace Amazon.Lambda.Handlers
+namespace Amazon.Lambda.Runtime.Example.Handlers
 {
   [LambdaFunction("handler-1")]
   public sealed class Handler1 : ILambdaHandler
