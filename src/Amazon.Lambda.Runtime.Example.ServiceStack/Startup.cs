@@ -9,6 +9,7 @@ using Amazon.Lambda.Services;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ServiceStack.Aws.DynamoDb;
 
 [assembly: LambdaSerializer(typeof(JsonSerializer))]
@@ -33,19 +34,25 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
       => HostBuilder.RunLambdaAsync(input, context);
 
     [LambdaFunction("handler-1")]
-    public void Handler1(IPocoDynamo dynamo)
+    public void Handler1(IPocoDynamo dynamo, ILogger<Startup> logger)
     {
       var posts = dynamo.GetAll<BlogPost>().ToArray();
 
       foreach (var post in posts)
       {
-        Console.WriteLine($"{post.Id} - {post.Title} - {post.Slug} - {post.Body}");
+        logger.LogInformation($"{post.Id} - {post.Title} - {post.Slug} - {post.Body}");
       }
     }
 
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
     {
+      services.AddLogging(builder =>
+      {
+        builder.AddConsole();
+        builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
+      });
+
       services.AddScoped<IPocoDynamo, PocoDynamo>();
 
       services.ConfigureHostingOptions(options =>

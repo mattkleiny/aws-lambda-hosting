@@ -8,6 +8,7 @@
   <Import Project="../../Shared.props" />
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
     <PackageReference Include="ServiceStack.Aws.Core" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
