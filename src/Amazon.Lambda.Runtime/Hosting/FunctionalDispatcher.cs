@@ -87,7 +87,8 @@ namespace Amazon.Lambda.Hosting
         {
           foreach (var parameter in parameters)
           {
-            if (parameter.ParameterType      == typeof(object)) yield return input;
+            if (parameter.ParameterType == typeof(object)) yield return input;
+            else if ("input".Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)) yield return input;
             else if (parameter.ParameterType == typeof(ILambdaContext)) yield return context;
             else if (parameter.ParameterType == typeof(IServiceProvider)) yield return services;
             else if (parameter.ParameterType == typeof(CancellationToken)) yield return token;

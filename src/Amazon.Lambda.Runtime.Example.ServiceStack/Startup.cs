@@ -30,7 +30,7 @@ namespace Amazon.Lambda
       => HostBuilder.RunLambdaAsync(input, context);
 
     [LambdaFunction("handler-1")]
-    public void Handler1(object input, IPocoDynamo dynamo)
+    public void Handler1(IPocoDynamo dynamo)
     {
       var posts = dynamo.GetAll<BlogPost>().ToArray();
 
@@ -60,23 +60,29 @@ namespace Amazon.Lambda
     }
 
     [UsedImplicitly]
-    public void Configure(IPocoDynamo dynamo, IHostingEnvironment environment)
+    public void Configure(IPocoDynamo dynamo)
     {
       dynamo.RegisterTable<BlogPost>();
+    }
 
-      // seed some data in the development environment
-      if (environment.IsDevelopment())
+    [UsedImplicitly]
+    public void ConfigureDevelopment(IPocoDynamo dynamo)
+    {
+      dynamo.DeleteAllTables();
+      dynamo.InitSchema();
+
+      dynamo.PutItems(Enumerable.Range(0, 100).Select(i => new BlogPost
       {
-        dynamo.DeleteAllTables();
-        dynamo.InitSchema();
+        Title = $"Post {i}",
+        Slug  = $"post-{i}",
+        Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut elit nunc. Donec lacinia nisl non molestie gravida."
+      }));
+    }
 
-        dynamo.PutItems(Enumerable.Range(0, 100).Select(i => new BlogPost
-        {
-          Title = $"Post {i}",
-          Slug  = $"post-{i}",
-          Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut elit nunc. Donec lacinia nisl non molestie gravida."
-        }));
-      }
+    [UsedImplicitly]
+    public void ConfigureProduction(IPocoDynamo dynamo)
+    {
+      dynamo.InitSchema();
     }
   }
 }
