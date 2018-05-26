@@ -11,6 +11,7 @@
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj" />
     <ProjectReference Include="..\Amazon.Lambda.Runtime.Dynamo\Amazon.Lambda.Runtime.Dynamo.csproj" />
     <ProjectReference Include="..\Amazon.Lambda.Runtime.S3\Amazon.Lambda.Runtime.S3.csproj" />
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />

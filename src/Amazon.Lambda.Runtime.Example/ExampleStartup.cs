@@ -27,8 +27,8 @@ namespace Amazon.Lambda
       .WithFunctionalHandlers<ExampleStartup>();
 
     /// <summary>This is the entry point from the CLI.</summary>
-    public static Task Main(string[] args)
-      => HostBuilder.WithLambdaSwitchboard().RunConsoleAsync(args);
+    public static Task<int> Main(string[] args)
+      => HostBuilder.WithLambdaSwitchboard().RunLambdaConsoleAsync(args);
 
     /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]

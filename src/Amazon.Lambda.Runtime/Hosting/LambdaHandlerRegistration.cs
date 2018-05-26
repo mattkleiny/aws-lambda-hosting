@@ -3,7 +3,7 @@
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Encapsulates a registration for a <see cref="ILambdaHandler"/> with it's associated <see cref="FunctionName"/>.</summary>
-  internal sealed class LambdaHandlerRegistration
+  public sealed class LambdaHandlerRegistration
   {
     public LambdaHandlerRegistration(string functionName, Type handlerType, string friendlyName)
     {

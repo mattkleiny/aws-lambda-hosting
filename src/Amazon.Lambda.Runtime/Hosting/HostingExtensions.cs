@@ -132,18 +132,6 @@ namespace Amazon.Lambda.Hosting
       return await handler.ExecuteAsync(input, context, token);
     }
 
-    /// <summary>Runs a command line application using the given console arguments.</summary>
-    public static async Task<object> RunConsoleAsync(this IHostBuilder builder, string[] args, CancellationToken token = default)
-    {
-      throw new NotImplementedException();
-    }
-
-    /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
-    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
-    {
-      return builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
-    }
-
     /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given <see cref="ILambdaContext"/>.</summary>
     public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, ILambdaContext context)
     {

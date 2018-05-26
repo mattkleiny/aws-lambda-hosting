@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{35BA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{08FD12B7-6CFA-4AB0-BDBB-6574915724A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Console", "src\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj", "{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2046CCCC-C718-4418-B901-25E68A94A2A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E71C5698-1F9A-435F-9642-010FFF15CDC0} = {8635ADB4-678B-4C65-A503-5FDB8B5C2963}
