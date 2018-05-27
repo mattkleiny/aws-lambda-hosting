@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
+using Amazon.Lambda.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -18,8 +19,15 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonDynamoDBConfig();
 
-          if (options.AWS.DefaultEndpoint != null) config.RegionEndpoint  = options.AWS.DefaultEndpoint;
-          if (options.RedirectTable.Contains("dynamo")) config.ServiceURL = options.RedirectTable["dynamo"].ToString();
+          if (options.RedirectTable.Contains(WellKnownService.Dynamo))
+          {
+            config.ServiceURL = options.RedirectTable[WellKnownService.Dynamo].ToString();
+          }
+
+          if (options.AWS.DefaultEndpoint != null)
+          {
+            config.RegionEndpoint = options.AWS.DefaultEndpoint;
+          }
 
           if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
           {

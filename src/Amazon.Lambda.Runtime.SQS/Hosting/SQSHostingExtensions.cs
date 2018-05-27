@@ -1,4 +1,5 @@
-﻿using Amazon.SQS;
+﻿using Amazon.Lambda.Services;
+using Amazon.SQS;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -18,8 +19,15 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonSQSConfig();
 
-          if (options.AWS.DefaultEndpoint != null) config.RegionEndpoint = options.AWS.DefaultEndpoint;
-          if (options.RedirectTable.Contains("sqs")) config.ServiceURL   = options.RedirectTable["sqs"].ToString();
+          if (options.RedirectTable.Contains(WellKnownService.SQS))
+          {
+            config.ServiceURL = options.RedirectTable[WellKnownService.SQS].ToString();
+          }
+
+          if (options.AWS.DefaultEndpoint != null)
+          {
+            config.RegionEndpoint = options.AWS.DefaultEndpoint;
+          }
 
           if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
           {

@@ -17,6 +17,9 @@ namespace Amazon.Lambda.Services
     /// <summary>Determines if the given service contains an entry in the table.</summary>
     public bool Contains(string service) => entries.ContainsKey(service);
 
+    /// <summary>Determines if the given <see cref="WellKnownService"/> contains an entry in the table.</summary>
+    public bool Contains(WellKnownService service) => Contains(ResolveService(service));
+
     /// <summary>Sets the redirect <see cref="Uri"/> for the given service.</summary>
     public Uri this[string service]
     {
@@ -40,6 +43,7 @@ namespace Amazon.Lambda.Services
     /// <summary>Sets the redirect <see cref="Uri"/> for the given <see cref="WellKnownService"/> .</summary>
     public Uri this[WellKnownService service]
     {
+      get => this[ResolveService(service)];
       set => this[ResolveService(service)] = value;
     }
 

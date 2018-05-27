@@ -1,4 +1,5 @@
-﻿using Amazon.SimpleNotificationService;
+﻿using Amazon.Lambda.Services;
+using Amazon.SimpleNotificationService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -18,8 +19,15 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonSimpleNotificationServiceConfig();
 
-          if (options.AWS.DefaultEndpoint != null) config.RegionEndpoint = options.AWS.DefaultEndpoint;
-          if (options.RedirectTable.Contains("sns")) config.ServiceURL   = options.RedirectTable["sns"].ToString();
+          if (options.RedirectTable.Contains(WellKnownService.SNS))
+          {
+            config.ServiceURL = options.RedirectTable[WellKnownService.SNS].ToString();
+          }
+
+          if (options.AWS.DefaultEndpoint != null)
+          {
+            config.RegionEndpoint = options.AWS.DefaultEndpoint;
+          }
 
           if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
           {

@@ -1,4 +1,5 @@
 ﻿using Amazon.ElastiCache;
+using Amazon.Lambda.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -18,8 +19,15 @@ namespace Amazon.Lambda.Hosting
           var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
           var config  = new AmazonElastiCacheConfig();
 
-          if (options.AWS.DefaultEndpoint != null) config.RegionEndpoint       = options.AWS.DefaultEndpoint;
-          if (options.RedirectTable.Contains("elasticache")) config.ServiceURL = options.RedirectTable["elasticache"].ToString();
+          if (options.RedirectTable.Contains(WellKnownService.ElastiCache))
+          {
+            config.ServiceURL = options.RedirectTable[WellKnownService.ElastiCache].ToString();
+          }
+          
+          if (options.AWS.DefaultEndpoint != null)
+          {
+            config.RegionEndpoint = options.AWS.DefaultEndpoint;
+          }
 
           if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
           {
