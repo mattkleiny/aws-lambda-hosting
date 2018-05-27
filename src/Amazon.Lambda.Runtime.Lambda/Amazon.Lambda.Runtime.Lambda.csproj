@@ -4,7 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.0-rc1-final" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\JetBrainsAnnotations.cs">
