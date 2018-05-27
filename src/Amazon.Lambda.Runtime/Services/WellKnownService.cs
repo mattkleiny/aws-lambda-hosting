@@ -8,5 +8,6 @@
     S3,
     SNS,
     SQS,
+    Lambda,
   }
 }
