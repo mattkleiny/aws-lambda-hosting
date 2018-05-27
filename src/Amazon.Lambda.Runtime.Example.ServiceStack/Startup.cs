@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.Diagnostics;
 using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Runtime.Example.ServiceStack.Model;
 using Amazon.Lambda.Serialization.Json;
@@ -49,7 +50,7 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
     {
       services.AddLogging(builder =>
       {
-        builder.AddConsole();
+        builder.AddLambdaLogger();
         builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
       });
 
