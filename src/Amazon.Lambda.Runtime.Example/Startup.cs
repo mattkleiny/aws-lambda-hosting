@@ -61,19 +61,19 @@ namespace Amazon.Lambda.Runtime.Example
 
       services.AddScoped<ITestService, TestService>();
 
-      if (environment.IsDevelopment())
+      services.ConfigureHostingOptions(options =>
       {
-        services.ConfigureHostingOptions(options =>
-        {
-          options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix(StringComparison.OrdinalIgnoreCase);
+        options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix();
 
+        if (environment.IsDevelopment())
+        {
           options.AWS.AccessKey = "A1B2C3D4E5";
           options.AWS.SecretKey = "A1B2C3D4E5";
 
           options.RedirectTable[WellKnownService.S3]     = new Uri("http://localhost:9000");
           options.RedirectTable[WellKnownService.Dynamo] = new Uri("http://localhost:8000");
-        });
-      }
+        }
+      });
     }
   }
 }

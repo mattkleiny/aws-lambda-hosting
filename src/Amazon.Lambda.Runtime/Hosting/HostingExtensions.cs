@@ -132,17 +132,9 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(context, nameof(context));
 
-      var handler = host.Services.ResolveLambdaHandler(context);
+      var handler = host.Services.ResolveLambdaHandler(input, context);
 
       return await handler.ExecuteAsync(input, context, cancellationToken);
-    }
-
-    /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given <see cref="ILambdaContext"/>.</summary>
-    public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, ILambdaContext context)
-    {
-      Check.NotNull(context, nameof(context));
-
-      return services.ResolveLambdaHandler(null, context);
     }
 
     /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given context.</summary>

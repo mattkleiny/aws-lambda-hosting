@@ -21,8 +21,6 @@ namespace Amazon.Lambda.Hosting
 
       application.Command("switchboard", command =>
       {
-        command.HelpOption();
-
         command.OnExecute(async () =>
         {
           builder.WithLambdaSwitchboard();
@@ -34,7 +32,7 @@ namespace Amazon.Lambda.Hosting
       application.Command("execute", command =>
       {
         command.HelpOption();
-        
+
         var functionOption = command.Argument<string>("function", "The name of the function to execute").IsRequired();
         var inputOption    = command.Option("-i|--input <INPUT>", "The input to pass to the function", CommandOptionType.SingleOrNoValue);
 
@@ -43,7 +41,10 @@ namespace Amazon.Lambda.Hosting
           var function = functionOption.Value;
           var input    = inputOption.Value();
 
-          var output = await builder.RunLambdaAsync(input, new LocalLambdaContext(function), cancellationToken);
+          // TODO: pre-process the input into the expected format
+
+          var context = new LocalLambdaContext(function);
+          var output  = await builder.RunLambdaAsync(input, context, cancellationToken);
 
           if (output != null)
           {

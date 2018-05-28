@@ -29,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{08
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Console", "src\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj", "{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.PowerShell", "src\Amazon.Lambda.Runtime.PowerShell\Amazon.Lambda.Runtime.PowerShell.csproj", "{00648461-D476-4C7C-B060-222A4B137145}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example.ServiceStack", "src\Amazon.Lambda.Runtime.Example.ServiceStack\Amazon.Lambda.Runtime.Example.ServiceStack.csproj", "{7CAA0BAC-2309-44E5-9062-1810EF4B0794}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.SNS", "src\Amazon.Lambda.Runtime.SNS\Amazon.Lambda.Runtime.SNS.csproj", "{02DB5944-B137-4692-90AA-02756463022C}"
@@ -71,10 +69,6 @@ Global
 		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00648461-D476-4C7C-B060-222A4B137145}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00648461-D476-4C7C-B060-222A4B137145}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00648461-D476-4C7C-B060-222A4B137145}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00648461-D476-4C7C-B060-222A4B137145}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7CAA0BAC-2309-44E5-9062-1810EF4B0794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7CAA0BAC-2309-44E5-9062-1810EF4B0794}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CAA0BAC-2309-44E5-9062-1810EF4B0794}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -11,14 +11,14 @@ namespace Amazon.Lambda.Diagnostics
   public static class MessageFormatters
   {
     /// <summary>Builds a default <see cref="MessageFormatter"/> with the given included metadata.</summary>
-    public static MessageFormatter DefaultFormatter(bool includeTime = true, bool includeLevel = true, bool includeScope = true)
+    public static MessageFormatter DefaultFormatter(bool includeTime = true, bool includeLevel = true, bool includeCategoryName = true)
     {
       return (level, categoryName, message) =>
       {
         var builder = new StringBuilder();
 
         if (includeTime) builder.Append($"{DateTime.Now:s} - ");
-        if (includeScope) builder.Append(categoryName);
+        if (includeCategoryName) builder.Append(categoryName);
         if (includeLevel) builder.Append($" [{level.ToString().ToUpper()}]: ");
 
         builder.Append(message);

@@ -6,10 +6,10 @@ namespace Amazon.Lambda.Hosting
   /// <summary>General options for hosting inside/outside of AWS.</summary>
   public sealed class HostingOptions
   {
-    /// <summary>The <see cref="MatchingStrategy"/> to use for determining the function handler to execute.</summary>
-    public MatchingStrategy MatchingStrategy { get; set; } = MatchingStrategies.MatchByName(StringComparison.OrdinalIgnoreCase);
+    /// <summary>The <see cref="MatchingStrategy"/> to use for determining the lambda handler to execute.</summary>
+    public MatchingStrategy MatchingStrategy { get; set; } = MatchingStrategies.MatchByName();
 
-    /// <summary>The <see cref="AmazonSettings"/> for the environment.</summary>
+    /// <summary>The <see cref="AmazonSettings"/> for the current environment.</summary>
     public AmazonSettings AWS { get; } = new AmazonSettings();
 
     /// <summary>The <see cref="Services.RedirectTable"/> for the current environment.</summary>

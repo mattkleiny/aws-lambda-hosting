@@ -58,7 +58,7 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
 
       services.ConfigureHostingOptions(options =>
       {
-        options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix(StringComparison.OrdinalIgnoreCase);
+        options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix();
 
         if (environment.IsDevelopment())
         {

@@ -13,8 +13,9 @@ namespace Amazon.Lambda.Diagnostics
   {
     private readonly ConcurrentDictionary<string, ILogger> loggers = new ConcurrentDictionary<string, ILogger>();
 
+    private readonly MessageQueue messageQueue = new MessageQueue();
+
     private readonly LambdaLoggerOptions          options;
-    private readonly MessageQueue                 messageQueue;
     private readonly Func<string, LogLevel, bool> levelFilter;
 
     public LambdaLoggerProvider(
@@ -26,8 +27,6 @@ namespace Amazon.Lambda.Diagnostics
 
       this.options = options.Value;
 
-      messageQueue = new MessageQueue();
-
       levelFilter = (category, level) => level >= filterOptions.Value.MinLevel;
     }
 
@@ -35,7 +34,7 @@ namespace Amazon.Lambda.Diagnostics
     {
       Check.NotNullOrEmpty(categoryName, nameof(categoryName));
 
-      return loggers.GetOrAdd(categoryName, _ => new Logger(categoryName, messageQueue, options, levelFilter));
+      return loggers.GetOrAdd(categoryName, _ => new Logger(messageQueue, categoryName, options, levelFilter));
     }
 
     public void Dispose()
@@ -53,15 +52,15 @@ namespace Amazon.Lambda.Diagnostics
     /// <summary>An <see cref="ILogger"/> which delegates to the <see cref="ILambdaLogger"/>.</summary>
     private sealed class Logger : ILogger
     {
-      private readonly string                       categoryName;
       private readonly MessageQueue                 messageQueue;
+      private readonly string                       categoryName;
       private readonly LambdaLoggerOptions          options;
       private readonly Func<string, LogLevel, bool> levelFilter;
 
-      public Logger(string categoryName, MessageQueue messageQueue, LambdaLoggerOptions options, Func<string, LogLevel, bool> levelFilter)
+      public Logger(MessageQueue messageQueue, string categoryName, LambdaLoggerOptions options, Func<string, LogLevel, bool> levelFilter)
       {
-        this.categoryName = categoryName;
         this.messageQueue = messageQueue;
+        this.categoryName = categoryName;
         this.options      = options;
         this.levelFilter  = levelFilter;
       }
@@ -82,7 +81,7 @@ namespace Amazon.Lambda.Diagnostics
 
         var message = formatter(state, exception);
 
-        messageQueue.EnqueueMessage(new LogMessage
+        messageQueue.Enqueue(new LogMessage
         {
           EventId = eventId,
           Message = FormatMessage(logLevel, message)
@@ -105,10 +104,18 @@ namespace Amazon.Lambda.Diagnostics
 
       public MessageQueue()
       {
-        processTask = Task.Factory.StartNew(ProcessQueue, this, TaskCreationOptions.LongRunning);
+        processTask = Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning);
       }
 
-      public void EnqueueMessage(LogMessage message)
+      private void ProcessQueue()
+      {
+        foreach (var message in messages.GetConsumingEnumerable())
+        {
+          WriteMessage(message);
+        }
+      }
+
+      public void Enqueue(LogMessage message)
       {
         if (!messages.IsAddingCompleted)
         {
@@ -137,14 +144,6 @@ namespace Amazon.Lambda.Diagnostics
         catch (TaskCanceledException)
         {
           // no-op
-        }
-      }
-
-      private void ProcessQueue(object state)
-      {
-        foreach (var message in messages.GetConsumingEnumerable())
-        {
-          WriteMessage(message);
         }
       }
 

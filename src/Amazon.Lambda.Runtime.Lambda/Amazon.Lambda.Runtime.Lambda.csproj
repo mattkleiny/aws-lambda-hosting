@@ -1,17 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Amazon.Lambda</RootNamespace>
+    <Description>Support for Lambda auto-configuration.</Description>
   </PropertyGroup>
+  <Import Project="../../Shared.props"/>
   <ItemGroup>
     <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\JetBrainsAnnotations.cs">
-      <Link>Shared\JetBrainsAnnotations.cs</Link>
-    </Compile>
-    <Compile Include="..\SharedPreconditions.cs">
-      <Link>Shared\SharedPreconditions.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
