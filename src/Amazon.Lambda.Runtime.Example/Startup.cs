@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.Diagnostics;
 using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Runtime.Example.Handlers;
 using Amazon.Lambda.Runtime.Example.Services;
@@ -11,6 +12,7 @@ using Amazon.S3;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 [assembly: LambdaSerializer(typeof(JsonSerializer))]
 
@@ -51,6 +53,12 @@ namespace Amazon.Lambda.Runtime.Example
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
     {
+      services.AddLogging(builder =>
+      {
+        builder.AddLambdaLogger();
+        builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
+      });
+
       services.AddScoped<ITestService, TestService>();
 
       if (environment.IsDevelopment())

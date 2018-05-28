@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>A service which displays a menu of all the attached <see cref="ILambdaHandler"/>s and permits their execution.</summary>
-  internal sealed class LambdaSwitchboard : IHostedService
+  internal sealed class LambdaSwitchboard : BackgroundService
   {
     private readonly LambdaHandlerRegistration[] registrations;
 
@@ -23,21 +23,18 @@ namespace Amazon.Lambda.Hosting
       this.host          = host;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      Task.Run(() => RunSwitchboard(cancellationToken), cancellationToken);
-
-      return Task.CompletedTask;
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-      // we're on a background thread which should terminate gracefully
-      return Task.CompletedTask;
+      return Task.Factory.StartNew(
+        () => RunSwitchboardAsync(stoppingToken),
+        stoppingToken,
+        TaskCreationOptions.LongRunning,
+        TaskScheduler.Default
+      );
     }
 
     /// <summary>Builds the main <see cref="Thread"/> for executing the switchboard.</summary>
-    private async Task RunSwitchboard(CancellationToken cancellationToken = default)
+    private async Task RunSwitchboardAsync(CancellationToken cancellationToken = default)
     {
       Thread.Sleep(100); // HACK: wait until the rest of the logs have completed
 
@@ -66,7 +63,8 @@ namespace Amazon.Lambda.Hosting
         // TODO: support various types of input here
         // TODO: support cancellation of long-running invocations here
 
-        var result = await host.RunLambdaAsync(null, new LocalLambdaContext(registration.FunctionName), cancellationToken);
+        var context = new LocalLambdaContext(registration.FunctionName);
+        var result  = await host.RunLambdaAsync(null, context, cancellationToken);
 
         Console.WriteLine(result);
       }
