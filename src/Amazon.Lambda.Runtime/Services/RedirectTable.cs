@@ -56,6 +56,7 @@ namespace Amazon.Lambda.Services
         case WellKnownService.S3:          return "s3";
         case WellKnownService.SNS:         return "sns";
         case WellKnownService.SQS:         return "sqs";
+        case WellKnownService.Lambda:      return "lambda";
 
         default:
           throw new ArgumentException($"An unrecognized service was provided: {service}");
