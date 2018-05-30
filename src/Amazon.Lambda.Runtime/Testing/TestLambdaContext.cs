@@ -39,6 +39,6 @@ namespace Amazon.Lambda.Testing
     public string           LogGroupName       { get; set; } = string.Empty;
     public string           LogStreamName      { get; set; } = string.Empty;
     public int              MemoryLimitInMB    { get; set; } = int.MaxValue;
-    public TimeSpan         RemainingTime      { get; set; } = TimeSpan.MaxValue;
+    public TimeSpan         RemainingTime      { get; set; } = TimeSpan.FromSeconds(300); // maximum execution time for a lambda in AWS
   }
 }

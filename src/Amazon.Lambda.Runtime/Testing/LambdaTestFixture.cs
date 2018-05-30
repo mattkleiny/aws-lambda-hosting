@@ -26,7 +26,7 @@ namespace Amazon.Lambda.Testing
       where THandler : class, ILambdaHandler
     {
       var context = new TestLambdaContext();
-      var handler = host.Services.GetService<THandler>();
+      var handler = host.Services.GetRequiredService<THandler>();
 
       return new LambdaUnderTest<THandler>(context, handler, host.Services);
     }

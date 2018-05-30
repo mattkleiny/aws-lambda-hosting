@@ -27,6 +27,7 @@ namespace Amazon.Lambda.Runtime.Example
       .UseDynamo()
       .WithHandler<Handler1>()
       .WithHandler<Handler2>()
+      .WithHandler<LongRunningHandler>()
       .WithFunctionalHandlers<Startup>();
 
     /// <summary>This is the entry point from the CLI.</summary>
