@@ -28,10 +28,11 @@ namespace Amazon.Lambda.Testing
     public Task<object> ExecuteAsync(object input, CancellationToken cancellationToken)
     {
       // limit the execution time of the lambda based on the remaining time in the context
-      var timeLimit    = new CancellationTokenSource(Context.RemainingTime);
-      var linkedTokens = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeLimit.Token);
-
-      return Handler.ExecuteAsync(input, Context, linkedTokens.Token);
+      using (var timeLimit = new CancellationTokenSource(Context.RemainingTime))
+      using (var linkedTokens = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeLimit.Token))
+      {
+        return Handler.ExecuteAsync(input, Context, linkedTokens.Token);
+      }
     }
   }
 }
