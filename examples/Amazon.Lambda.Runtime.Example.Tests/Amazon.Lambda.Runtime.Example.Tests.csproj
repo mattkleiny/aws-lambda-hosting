@@ -12,6 +12,6 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.Example\Amazon.Lambda.Runtime.Example.csproj" />
+    <ProjectReference Include="..\Amazon.Lambda.Runtime.Example\Amazon.Lambda.Runtime.Example.csproj" />
   </ItemGroup>
 </Project>

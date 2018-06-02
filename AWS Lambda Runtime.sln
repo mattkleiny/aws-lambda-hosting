@@ -15,9 +15,9 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime", "src\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj", "{BD80C273-761E-42D7-AB6C-43B17EC21C20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example", "src\Amazon.Lambda.Runtime.Example\Amazon.Lambda.Runtime.Example.csproj", "{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example", "examples\Amazon.Lambda.Runtime.Example\Amazon.Lambda.Runtime.Example.csproj", "{B5CB6C08-B752-437F-AE9D-CDA6F77589AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example.Tests", "tests\Amazon.Lambda.Runtime.Example.Tests\Amazon.Lambda.Runtime.Example.Tests.csproj", "{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example.Tests", "examples\Amazon.Lambda.Runtime.Example.Tests\Amazon.Lambda.Runtime.Example.Tests.csproj", "{BF6F2D27-34F4-4CB3-AF69-6E8F53DE3F02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.S3", "src\Amazon.Lambda.Runtime.S3\Amazon.Lambda.Runtime.S3.csproj", "{87356F62-FEE1-424F-8A0E-A90C696EDF0C}"
 EndProject
@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{08
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Console", "src\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj", "{E860769B-E65D-4D7A-8AAE-5B006BDABBE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example.ServiceStack", "src\Amazon.Lambda.Runtime.Example.ServiceStack\Amazon.Lambda.Runtime.Example.ServiceStack.csproj", "{7CAA0BAC-2309-44E5-9062-1810EF4B0794}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Example.ServiceStack", "examples\Amazon.Lambda.Runtime.Example.ServiceStack\Amazon.Lambda.Runtime.Example.ServiceStack.csproj", "{7CAA0BAC-2309-44E5-9062-1810EF4B0794}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.SNS", "src\Amazon.Lambda.Runtime.SNS\Amazon.Lambda.Runtime.SNS.csproj", "{02DB5944-B137-4692-90AA-02756463022C}"
 EndProject

@@ -12,9 +12,9 @@
     <PackageReference Include="ServiceStack.Aws.Core" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj" />
-    <ProjectReference Include="..\Amazon.Lambda.Runtime.Dynamo\Amazon.Lambda.Runtime.Dynamo.csproj" />
-    <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.Dynamo\Amazon.Lambda.Runtime.Dynamo.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.3" />
