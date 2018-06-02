@@ -6,9 +6,9 @@
   </PropertyGroup>
   <Import Project="../../Shared.props"/>
   <ItemGroup>
-    <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
+    <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.2" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.2" />
+    <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
 </Project>
