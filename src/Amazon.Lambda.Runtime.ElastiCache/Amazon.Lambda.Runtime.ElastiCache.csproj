@@ -9,6 +9,6 @@
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.ElastiCache" Version="3.3.5.6" />
+    <PackageReference Include="AWSSDK.ElastiCache" Version="3.3.5.10" />
   </ItemGroup>
 </Project>

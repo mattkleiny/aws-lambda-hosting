@@ -4,11 +4,11 @@
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>Support for Lambda auto-configuration.</Description>
   </PropertyGroup>
-  <Import Project="../../Shared.props"/>
-  <ItemGroup>
-    <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.2" />
-  </ItemGroup>
+  <Import Project="../../Shared.props" />
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Lambda" Version="3.3.15" />
   </ItemGroup>
 </Project>

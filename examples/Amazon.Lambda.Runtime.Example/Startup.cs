@@ -63,8 +63,6 @@ namespace Amazon.Lambda.Runtime.Example
 
       services.ConfigureHostingOptions(options =>
       {
-        options.MatchingStrategy = MatchingStrategies.MatchByNameSuffix();
-
         if (environment.IsDevelopment())
         {
           options.AWS.AccessKey = "A1B2C3D4E5";
