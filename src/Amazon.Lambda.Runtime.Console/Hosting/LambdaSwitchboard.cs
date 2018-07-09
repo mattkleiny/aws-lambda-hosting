@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +36,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Builds the main <see cref="Thread"/> for executing the switchboard.</summary>
     private async Task RunSwitchboardAsync(CancellationToken cancellationToken = default)
     {
-      Thread.Sleep(100); // HACK: wait until the rest of the logs have completed
+      await Task.Delay(100, cancellationToken); // HACK: wait until the rest of the logs have completed
 
       Console.WriteLine("Welcome to the lambda switchboard.");
       Console.WriteLine("Please make your selection below:");

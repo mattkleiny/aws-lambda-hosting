@@ -155,5 +155,15 @@ namespace Amazon.Lambda.Hosting
 
       throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
     }
+
+    /// <summary>Configures the <see cref="HostingOptions"/> for the application.</summary>
+    public static IServiceCollection ConfigureHostingOptions(this IServiceCollection services, Action<HostingOptions> configurer)
+    {
+      Check.NotNull(configurer, nameof(configurer));
+
+      services.Configure(configurer);
+
+      return services;
+    }
   }
 }

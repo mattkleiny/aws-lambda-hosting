@@ -1,7 +1,6 @@
 ﻿using System;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Diagnostics;
-using Amazon.Lambda.Internal;
 
 namespace Amazon.Lambda.Hosting
 {
