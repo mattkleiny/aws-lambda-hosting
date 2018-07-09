@@ -22,9 +22,7 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
   {
     /// <summary>The <see cref="IHostBuilder"/> for this example.</summary>
     public static IHostBuilder HostBuilder => new HostBuilder()
-      .UseStartup<Startup>()
-      .UseDynamo()
-      .WithFunctionalHandlers<BlogPostHandler>();
+      .UseStartup<Startup>();
 
     /// <summary>This is the entry point from the CLI.</summary>
     public static Task<int> Main(string[] args)
@@ -44,6 +42,8 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
         builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
       });
 
+      services.AddDynamo();
+      services.AddFunctionalHandlers<BlogPostHandler>();
       services.AddScoped<IPocoDynamo, PocoDynamo>();
 
       services.ConfigureHostingOptions(options =>

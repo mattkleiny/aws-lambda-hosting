@@ -1,40 +1,37 @@
 ﻿using Amazon.Lambda.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 namespace Amazon.Lambda.Hosting
 {
-	public static class LambdaHostingExtensions
-	{
-		/// <summary>Adds Lambda support to the host.</summary>
-		public static IHostBuilder UseLambda(this IHostBuilder builder)
-		{
-			return builder.ConfigureServices((context, services) =>
-			{
-				services.AddScoped<IAmazonLambda>(provider =>
-				{
-					var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
-					var config  = new AmazonLambdaConfig();
+  /// <summary>Extensions for simplifying interaction with Lambda.</summary>
+  public static class LambdaHostingExtensions
+  {
+    /// <summary>Adds Lambda support to the <see cref="IServiceCollection"/>.</summary>
+    public static IServiceCollection AddLambda(this IServiceCollection services)
+    {
+      return services.AddSingleton<IAmazonLambda>(provider =>
+      {
+        var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
+        var config  = new AmazonLambdaConfig();
 
-					if (options.RedirectTable.Contains(WellKnownService.Lambda))
-					{
-						config.ServiceURL = options.RedirectTable[WellKnownService.Lambda].ToString();
-					}
-          
-					if (options.AWS.DefaultEndpoint != null)
-					{
-						config.RegionEndpoint = options.AWS.DefaultEndpoint;
-					}
+        if (options.RedirectTable.Contains(WellKnownService.Lambda))
+        {
+          config.ServiceURL = options.RedirectTable[WellKnownService.Lambda].ToString();
+        }
 
-					if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
-					{
-						return new AmazonLambdaClient(options.AWS.AccessKey, options.AWS.SecretKey, config);
-					}
+        if (options.AWS.DefaultEndpoint != null)
+        {
+          config.RegionEndpoint = options.AWS.DefaultEndpoint;
+        }
 
-					return new AmazonLambdaClient(config);
-				});
-			});
-		}
-	}
+        if (!string.IsNullOrEmpty(options.AWS.AccessKey) || !string.IsNullOrEmpty(options.AWS.SecretKey))
+        {
+          return new AmazonLambdaClient(options.AWS.AccessKey, options.AWS.SecretKey, config);
+        }
+
+        return new AmazonLambdaClient(config);
+      });
+    }
+  }
 }

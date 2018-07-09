@@ -50,72 +50,6 @@ namespace Amazon.Lambda.Hosting
       return builder;
     }
 
-    /// <summary>Maps the given <see cref="ILambdaHandler"/> with it's associate <see cref="LambdaFunctionAttribute.FunctionName"/> in the host.</summary>
-    public static IHostBuilder WithHandler<THandler>(this IHostBuilder builder)
-      where THandler : class, ILambdaHandler
-    {
-      var attribute = typeof(THandler).GetCustomAttribute<LambdaFunctionAttribute>();
-
-      if (attribute == null)
-      {
-        throw new ArgumentException($"The handler ${typeof(THandler)} does not have an associated ${nameof(LambdaFunctionAttribute)}.");
-      }
-
-      return builder.WithHandler<THandler>(attribute.FunctionName);
-    }
-
-    /// <summary>Maps the given <see cref="ILambdaHandler"/> to the given <see cref="functionName"/> in the host.</summary>
-    public static IHostBuilder WithHandler<THandler>(this IHostBuilder builder, string functionName)
-      where THandler : class, ILambdaHandler
-    {
-      Check.NotNullOrEmpty(functionName, nameof(functionName));
-
-      builder.ConfigureServices(services =>
-      {
-        services.AddScoped<THandler>();
-        services.AddSingleton(new LambdaHandlerRegistration(
-          functionName: functionName,
-          handlerType: typeof(THandler),
-          friendlyName: typeof(THandler).Name
-        ));
-      });
-
-      return builder;
-    }
-
-    /// <summary>Maps the functional handlers from the given classes publically accessible <see cref="LambdaFunctionAttribute"/> annotated methods.</summary>
-    public static IHostBuilder WithFunctionalHandlers<THandler>(this IHostBuilder builder)
-      where THandler : class
-    {
-      var functions = FunctionalDispatcher<THandler>.DiscoverFunctions();
-
-      if (!functions.Any())
-      {
-        throw new InvalidOperationException($"The handler ${typeof(THandler)} does not have any valid functional handlers");
-      }
-
-      builder.ConfigureServices(services =>
-      {
-        services.AddScoped<THandler>();
-        services.AddScoped(provider => new FunctionalDispatcher<THandler>(
-          host: provider.GetRequiredService<IHost>(),
-          hostingOptions: provider.GetRequiredService<IOptions<HostingOptions>>(),
-          functions: functions
-        ));
-
-        foreach (var function in functions)
-        {
-          services.AddSingleton(new LambdaHandlerRegistration(
-            function.FunctionName,
-            handlerType: typeof(FunctionalDispatcher<THandler>),
-            friendlyName: function.FriendlyName
-          ));
-        }
-      });
-
-      return builder;
-    }
-
     /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
     public static async Task<object> RunLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context, CancellationToken cancellationToken = default)
     {
@@ -154,6 +88,66 @@ namespace Amazon.Lambda.Hosting
       }
 
       throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
+    }
+
+    /// <summary>Maps the given <see cref="ILambdaHandler"/> with it's associate <see cref="LambdaFunctionAttribute.FunctionName"/> in the host.</summary>
+    public static IServiceCollection AddHandler<THandler>(this IServiceCollection services)
+      where THandler : class, ILambdaHandler
+    {
+      var attribute = typeof(THandler).GetCustomAttribute<LambdaFunctionAttribute>();
+
+      if (attribute == null)
+      {
+        throw new ArgumentException($"The handler ${typeof(THandler)} does not have an associated ${nameof(LambdaFunctionAttribute)}.");
+      }
+
+      return services.AddHandler<THandler>(attribute.FunctionName);
+    }
+
+    /// <summary>Maps the given <see cref="ILambdaHandler"/> to the given <see cref="functionName"/> in the host.</summary>
+    public static IServiceCollection AddHandler<THandler>(this IServiceCollection services, string functionName)
+      where THandler : class, ILambdaHandler
+    {
+      Check.NotNullOrEmpty(functionName, nameof(functionName));
+
+      services.AddScoped<THandler>();
+      services.AddSingleton(new LambdaHandlerRegistration(
+        functionName: functionName,
+        handlerType: typeof(THandler),
+        friendlyName: typeof(THandler).Name
+      ));
+
+      return services;
+    }
+
+    /// <summary>Maps the functional handlers from the given classes publically accessible <see cref="LambdaFunctionAttribute"/> annotated methods.</summary>
+    public static IServiceCollection AddFunctionalHandlers<THandler>(this IServiceCollection services)
+      where THandler : class
+    {
+      var functions = FunctionalDispatcher<THandler>.DiscoverFunctions();
+
+      if (!functions.Any())
+      {
+        throw new InvalidOperationException($"The handler ${typeof(THandler)} does not have any valid functional handlers");
+      }
+
+      services.AddScoped<THandler>();
+      services.AddScoped(provider => new FunctionalDispatcher<THandler>(
+        host: provider.GetRequiredService<IHost>(),
+        hostingOptions: provider.GetRequiredService<IOptions<HostingOptions>>(),
+        functions: functions
+      ));
+
+      foreach (var function in functions)
+      {
+        services.AddSingleton(new LambdaHandlerRegistration(
+          function.FunctionName,
+          handlerType: typeof(FunctionalDispatcher<THandler>),
+          friendlyName: function.FriendlyName
+        ));
+      }
+
+      return services;
     }
 
     /// <summary>Configures the <see cref="HostingOptions"/> for the application.</summary>

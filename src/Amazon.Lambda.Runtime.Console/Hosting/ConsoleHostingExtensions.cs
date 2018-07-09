@@ -23,7 +23,7 @@ namespace Amazon.Lambda.Hosting
       {
         command.OnExecute(async () =>
         {
-          builder.WithLambdaSwitchboard();
+          builder.ConfigureServices(services => services.AddLambdaSwitchboard());
 
           await builder.RunConsoleAsync(cancellationToken);
         });
@@ -57,9 +57,9 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Adds a service which displays a menu of all the attached lambda handlers and permits their execution.</summary>
-    public static IHostBuilder WithLambdaSwitchboard(this IHostBuilder builder)
+    public static IServiceCollection AddLambdaSwitchboard(this IServiceCollection services)
     {
-      return builder.ConfigureServices(services => services.AddSingleton<IHostedService, LambdaSwitchboard>());
+      return services.AddSingleton<IHostedService, LambdaSwitchboard>();
     }
   }
 }

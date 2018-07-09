@@ -22,12 +22,7 @@ namespace Amazon.Lambda.Runtime.Example
   {
     /// <summary>The <see cref="IHostBuilder"/> for this example.</summary>
     public static IHostBuilder HostBuilder => new HostBuilder()
-      .UseStartup<Startup>()
-      .UseS3()
-      .UseDynamo()
-      .WithHandler<Handler1>()
-      .WithHandler<Handler2>()
-      .WithFunctionalHandlers<Startup>();
+      .UseStartup<Startup>();
 
     /// <summary>This is the entry point from the CLI.</summary>
     public static Task<int> Main(string[] args)
@@ -59,6 +54,11 @@ namespace Amazon.Lambda.Runtime.Example
         builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
       });
 
+      services.AddS3();
+      services.AddDynamo();
+      services.AddHandler<Handler1>();
+      services.AddHandler<Handler2>();
+      services.AddFunctionalHandlers<Startup>();
       services.AddScoped<ITestService, TestService>();
 
       services.ConfigureHostingOptions(options =>
