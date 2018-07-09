@@ -5,7 +5,6 @@ using Amazon.Lambda.Diagnostics;
 using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Services;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Exporters;
 using BenchmarkDotNet.Attributes.Jobs;
 using BenchmarkDotNet.Running;
 using JetBrains.Annotations;
@@ -16,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace Amazon.Lambda.Runtime.Benchmarks
 {
   /// <summary>Benchmarks for hosting overhead caused by this model of lambda design.</summary>
-  [CoreJob, RPlotExporter]
+  [CoreJob]
   public class HostingBenchmarks
   {
     public static void Main(string[] args)

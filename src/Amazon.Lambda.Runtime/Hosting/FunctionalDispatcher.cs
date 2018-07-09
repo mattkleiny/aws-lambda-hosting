@@ -81,7 +81,7 @@ namespace Amazon.Lambda.Hosting
       internal LambdaHandlerRegistration Registration { get; }
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
-      public Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
+      public async Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
       {
         IEnumerable<object> PopulateParameters()
         {
@@ -102,14 +102,14 @@ namespace Amazon.Lambda.Hosting
         switch (result)
         {
           case Task<object> task:
-            return task;
+            return await task;
 
           case Task task:
-            task.Wait(cancellationToken);
+            await task;
             return null;
 
           default:
-            return Task.FromResult(result);
+            return result;
         }
       }
     }
