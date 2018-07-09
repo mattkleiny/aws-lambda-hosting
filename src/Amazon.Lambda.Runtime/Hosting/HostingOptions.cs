@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.Lambda.Services;
+﻿using Amazon.Lambda.Services;
 
 namespace Amazon.Lambda.Hosting
 {
@@ -7,7 +6,7 @@ namespace Amazon.Lambda.Hosting
   public sealed class HostingOptions
   {
     /// <summary>The <see cref="MatchingStrategy"/> to use for determining the lambda handler to execute.</summary>
-    public MatchingStrategy MatchingStrategy { get; set; } = MatchingStrategies.MatchByName();
+    public MatchingStrategy MatchingStrategy { get; set; } = MatchingStrategies.MatchByNameSuffix();
 
     /// <summary>The <see cref="AmazonSettings"/> for the current environment.</summary>
     public AmazonSettings AWS { get; } = new AmazonSettings();
