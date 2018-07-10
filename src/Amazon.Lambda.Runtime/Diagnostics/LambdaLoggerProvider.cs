@@ -90,8 +90,8 @@ namespace Amazon.Lambda.Diagnostics
 
       private string FormatMessage(LogLevel logLevel, string message)
       {
-        // if a null message formatter is provided, just format an empty string
-        return options?.MessageFormatter(logLevel, categoryName, message) ?? string.Empty;
+        // if a null message formatter is provided, just return the base message
+        return options?.MessageFormatter(logLevel, categoryName, message) ?? message;
       }
     }
 
