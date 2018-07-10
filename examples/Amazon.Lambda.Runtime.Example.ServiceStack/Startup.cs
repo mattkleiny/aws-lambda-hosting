@@ -43,7 +43,9 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
       });
 
       services.AddDynamo();
-      services.AddFunctionalHandlers<BlogPostHandler>();
+      services.AddS3();
+
+      services.AddFunctionalHandlers<ExampleHandler>();
       services.AddScoped<IPocoDynamo, PocoDynamo>();
 
       services.ConfigureHostingOptions(options =>
@@ -54,6 +56,7 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
           options.AWS.SecretKey = "A1B2C3D4E5";
 
           options.RedirectTable[WellKnownService.Dynamo] = new Uri("http://localhost:8000");
+          options.RedirectTable[WellKnownService.S3]     = new Uri("http://localhost:9000");
         }
       });
     }
@@ -65,15 +68,19 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
 
       if (environment.IsDevelopment())
       {
-        dynamo.DeleteAllTables();
-        dynamo.InitSchema();
-
-        dynamo.PutItems(Enumerable.Range(0, 100).Select(i => new BlogPost
+        // asynchronously rebuild the development database
+        Task.Factory.StartNew(() =>
         {
-          Title = $"Post {i}",
-          Slug  = $"post-{i}",
-          Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut elit nunc. Donec lacinia nisl non molestie gravida."
-        }));
+          dynamo.DeleteAllTables();
+          dynamo.InitSchema();
+
+          dynamo.PutItems(Enumerable.Range(0, 100).Select(i => new BlogPost
+          {
+            Title = $"Post {i}",
+            Slug  = $"post-{i}",
+            Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut elit nunc. Donec lacinia nisl non molestie gravida."
+          }));
+        });
       }
     }
   }

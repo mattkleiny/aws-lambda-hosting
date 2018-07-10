@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.Console\Amazon.Lambda.Runtime.Console.csproj" />
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.Dynamo\Amazon.Lambda.Runtime.Dynamo.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.S3\Amazon.Lambda.Runtime.S3.csproj" />
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
   <ItemGroup>
