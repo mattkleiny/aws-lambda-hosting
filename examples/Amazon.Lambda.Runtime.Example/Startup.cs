@@ -54,11 +54,18 @@ namespace Amazon.Lambda.Runtime.Example
         builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
       });
 
-      services.AddS3();
       services.AddDynamo();
+      services.AddElastiCache();
+      services.AddLambda();
+      services.AddS3();
+      services.AddSNS();
+      services.AddSQS();
+      services.AddStepFunctions();
+
       services.AddHandler<Handler1>();
       services.AddHandler<Handler2>();
       services.AddFunctionalHandlers<Startup>();
+
       services.AddScoped<ITestService, TestService>();
 
       services.ConfigureHostingOptions(options =>

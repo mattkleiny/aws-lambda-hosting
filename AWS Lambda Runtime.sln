@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.Benchmarks", "tests\Amazon.Lambda.Runtime.Benchmarks\Amazon.Lambda.Runtime.Benchmarks.csproj", "{30754DF1-8C8E-474C-B5EB-0FB961CC8F42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Runtime.StepFunctions", "src\Amazon.Lambda.Runtime.StepFunctions\Amazon.Lambda.Runtime.StepFunctions.csproj", "{B62CEE64-6C42-4AB7-A423-CA2B24014B19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{30754DF1-8C8E-474C-B5EB-0FB961CC8F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30754DF1-8C8E-474C-B5EB-0FB961CC8F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30754DF1-8C8E-474C-B5EB-0FB961CC8F42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B62CEE64-6C42-4AB7-A423-CA2B24014B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62CEE64-6C42-4AB7-A423-CA2B24014B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62CEE64-6C42-4AB7-A423-CA2B24014B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62CEE64-6C42-4AB7-A423-CA2B24014B19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E71C5698-1F9A-435F-9642-010FFF15CDC0} = {8635ADB4-678B-4C65-A503-5FDB8B5C2963}
@@ -119,5 +125,6 @@ Global
 		{1B3008D4-748D-4062-A160-0DA7DB86D374} = {08FD12B7-6CFA-4AB0-BDBB-6574915724A3}
 		{A740E69D-4342-45DF-AF36-EE9342FAAA5A} = {5D06B973-72EA-4DB5-99D5-36D849ECCFF9}
 		{30754DF1-8C8E-474C-B5EB-0FB961CC8F42} = {5D06B973-72EA-4DB5-99D5-36D849ECCFF9}
+		{B62CEE64-6C42-4AB7-A423-CA2B24014B19} = {08FD12B7-6CFA-4AB0-BDBB-6574915724A3}
 	EndGlobalSection
 EndGlobal

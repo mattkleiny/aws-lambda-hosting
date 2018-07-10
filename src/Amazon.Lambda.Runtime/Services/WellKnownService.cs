@@ -9,5 +9,6 @@
     SNS,
     SQS,
     Lambda,
+    StepFunctions
   }
 }
