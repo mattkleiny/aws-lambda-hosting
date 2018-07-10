@@ -17,10 +17,10 @@ namespace Amazon.Lambda.Hosting
     /// <summary>General options for AWS-based services.</summary>
     public sealed class AmazonSettings
     {
-      /// <summary>A default secret key for AWS services.</summary>
+      /// <summary>The access key for AWS services.</summary>
       public string AccessKey { get; set; }
 
-      /// <summary>A default secret key for AWS services.</summary>
+      /// <summary>The secret key for AWS services.</summary>
       public string SecretKey { get; set; }
 
       /// <summary>The default <see cref="RegionEndpoint"/> to use for services.</summary>

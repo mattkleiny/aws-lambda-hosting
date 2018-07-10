@@ -6,6 +6,7 @@ ProjectSection(SolutionItems) = preProject
 	.gitignore = .gitignore
 	Shared.props = Shared.props
 	Tests.props = Tests.props
+	LICENSE.md = LICENSE.md
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared Code", "Shared Code", "{E71C5698-1F9A-435F-9642-010FFF15CDC0}"
