@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Amazon.Lambda.Core;
 using Amazon.Lambda.Hosting;
 
 namespace Amazon.Lambda.Testing
@@ -10,7 +9,7 @@ namespace Amazon.Lambda.Testing
   internal sealed class LambdaUnderTest<THandler> : ILambdaUnderTest<THandler>
     where THandler : class, ILambdaHandler
   {
-    public LambdaUnderTest(ILambdaContext context, THandler handler, IServiceProvider services)
+    public LambdaUnderTest(TestLambdaContext context, THandler handler, IServiceProvider services)
     {
       Check.NotNull(context,  nameof(context));
       Check.NotNull(handler,  nameof(handler));
@@ -21,9 +20,9 @@ namespace Amazon.Lambda.Testing
       Services = services;
     }
 
-    public ILambdaContext   Context  { get; }
-    public THandler         Handler  { get; }
-    public IServiceProvider Services { get; }
+    public TestLambdaContext Context  { get; }
+    public THandler          Handler  { get; }
+    public IServiceProvider  Services { get; }
 
     public Task<object> ExecuteAsync(object input, CancellationToken cancellationToken)
     {
@@ -31,6 +30,11 @@ namespace Amazon.Lambda.Testing
       using (var timeLimit = new CancellationTokenSource(Context.RemainingTime))
       using (var linkedTokens = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeLimit.Token))
       {
+        if (linkedTokens.IsCancellationRequested)
+        {
+          return Task.FromCanceled<object>(linkedTokens.Token);
+        }
+
         return Handler.ExecuteAsync(input, Context, linkedTokens.Token);
       }
     }

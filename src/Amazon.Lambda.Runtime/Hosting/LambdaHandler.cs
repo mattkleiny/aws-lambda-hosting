@@ -4,6 +4,18 @@ using Amazon.Lambda.Core;
 
 namespace Amazon.Lambda.Hosting
 {
+  /// <summary>A strongly-typed <see cref="ILambdaHandler"/> that expects no input and provides no output.</summary>
+  public abstract class LambdaHandler : ILambdaHandler
+  {
+    public abstract Task ExecuteAsync(ILambdaContext context, CancellationToken cancellationToken = default);
+
+    async Task<object> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
+    {
+      await ExecuteAsync(context, cancellationToken);
+      return null;
+    }
+  }
+
   /// <summary>A strongly-typed <see cref="ILambdaHandler"/> that expects input of the given type, <see cref="T"/>.</summary>
   public abstract class LambdaHandler<T> : ILambdaHandler
   {
