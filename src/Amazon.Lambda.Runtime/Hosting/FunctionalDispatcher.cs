@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -59,8 +58,9 @@ namespace Amazon.Lambda.Hosting
     /// <summary>A wrapper for a functional invocation target.</summary>
     internal sealed class TargetFunction
     {
-      private readonly MethodInfo      method;
-      private readonly ParameterInfo[] parameters;
+      private readonly MethodInfo                 method;
+      private readonly ParameterInfo[]            parameters;
+      private readonly Func<object, Task<object>> extractor;
 
       public TargetFunction(MethodInfo method, string functionName)
       {
@@ -71,12 +71,13 @@ namespace Amazon.Lambda.Hosting
         parameters  = method.GetParameters().ToArray();
 
         FunctionName = functionName;
-
         Registration = new LambdaHandlerRegistration(
           functionName: functionName,
           typeof(THandler),
           friendlyName: method.Name
         );
+
+        extractor = CreateResultExtractor(method);
       }
 
       public string FunctionName { get; }
@@ -91,29 +92,65 @@ namespace Amazon.Lambda.Hosting
         var arguments = parameters.Select(parameter =>
         {
           if ("input".Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)) return input;
-          
+
           if (parameter.ParameterType == typeof(object)) return input;
           if (parameter.ParameterType == typeof(ILambdaContext)) return context;
           if (parameter.ParameterType == typeof(IServiceProvider)) return services;
           if (parameter.ParameterType == typeof(CancellationToken)) return cancellationToken;
-          
+
           return services.GetRequiredService(parameter.ParameterType);
         });
 
+        // static methods don't require a 'this' parameter, and can simply specify null
         var handler = !method.IsStatic ? services.GetRequiredService<THandler>() : null;
         var result  = method.Invoke(handler, arguments.ToArray());
 
-        switch (result)
+        return await extractor(result);
+      }
+
+      /// <summary>
+      /// Builds a delegate which is specialized for the result type of our handler method invocation, capable of extracting
+      /// the relevant result type from the returned method invocation and awaiting/unpacking as necessary.
+      /// </summary>
+      /// <remarks>
+      /// The TResult in <see cref="Task{TResult}"/> is invariant, which means we can't simply check to see if the result
+      /// 'is Task of object' and await the result.  
+      /// </remarks>
+      private static Func<object, Task<object>> CreateResultExtractor(MethodInfo method)
+      {
+        // check to see if the result is a Task, and extract it's type parameter if necessary.
+        Type ExtractResultType(Type type)
         {
-          case Task<object> task:
+          if (typeof(Task).IsAssignableFrom(type) && type.IsGenericType)
+          {
+            return type.GenericTypeArguments[0];
+          }
+
+          return type;
+        }
+
+        var resultType = ExtractResultType(method.ReturnType);
+
+        var genericMethod     = typeof(TargetFunction).GetMethod(nameof(ExtractResultAsync), BindingFlags.Static | BindingFlags.NonPublic);
+        var specializedMethod = genericMethod.MakeGenericMethod(resultType);
+
+        return (Func<object, Task<object>>) specializedMethod.CreateDelegate(typeof(Func<object, Task<object>>));
+      }
+
+      /// <summary>Extracts the result of the given <see cref="output"/> with the given expected inner type <see cref="T"/>.</summary>
+      private static async Task<object> ExtractResultAsync<T>(object output)
+      {
+        switch (output)
+        {
+          case Task<T> task:
             return await task;
 
           case Task task:
             await task;
-            return null;
+            return default;
 
           default:
-            return result;
+            return output;
         }
       }
     }

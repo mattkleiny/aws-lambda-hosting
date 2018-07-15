@@ -46,9 +46,9 @@ namespace Amazon.Lambda.Runtime.Example
     }
     
     [LambdaFunction("handler-5")]
-    public static string Handler5(ILambdaContext context)
+    public static Task<string> Handler5(ILambdaContext context)
     {
-      return $"Hello, from {context.FunctionName}!";
+      return Task.FromResult($"Hello, from {context.FunctionName}!");
     }
 
     [UsedImplicitly]
