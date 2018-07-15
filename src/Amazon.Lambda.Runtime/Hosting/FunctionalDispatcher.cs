@@ -40,7 +40,7 @@ namespace Amazon.Lambda.Hosting
       isMatch = hostingOptions.Value.MatchingStrategy;
     }
 
-    public Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
+    public async Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
       Check.NotNull(context, nameof(context));
 
@@ -48,7 +48,7 @@ namespace Amazon.Lambda.Hosting
       {
         if (isMatch(function.Registration, input, context))
         {
-          return function.Invoke(input, context, host.Services, cancellationToken);
+          return await function.Invoke(input, context, host.Services, cancellationToken);
         }
       }
 
@@ -58,9 +58,8 @@ namespace Amazon.Lambda.Hosting
     /// <summary>A wrapper for a functional invocation target.</summary>
     internal sealed class TargetFunction
     {
-      private readonly MethodInfo                 method;
-      private readonly ParameterInfo[]            parameters;
-      private readonly Func<object, Task<object>> extractor;
+      private readonly MethodInfo      method;
+      private readonly ParameterInfo[] parameters;
 
       public TargetFunction(MethodInfo method, string functionName)
       {
@@ -76,8 +75,6 @@ namespace Amazon.Lambda.Hosting
           typeof(THandler),
           friendlyName: method.Name
         );
-
-        extractor = CreateResultExtractor(method);
       }
 
       public string FunctionName { get; }
@@ -87,7 +84,7 @@ namespace Amazon.Lambda.Hosting
       internal LambdaHandlerRegistration Registration { get; }
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
-      public async Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
+      public dynamic Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
       {
         var arguments = parameters.Select(parameter =>
         {
@@ -105,53 +102,7 @@ namespace Amazon.Lambda.Hosting
         var handler = !method.IsStatic ? services.GetRequiredService<THandler>() : null;
         var result  = method.Invoke(handler, arguments.ToArray());
 
-        return await extractor(result);
-      }
-
-      /// <summary>
-      /// Builds a delegate which is specialized for the result type of our handler method invocation, capable of extracting
-      /// the relevant result type from the returned method invocation and awaiting/unpacking as necessary.
-      /// </summary>
-      /// <remarks>
-      /// The TResult in <see cref="Task{TResult}"/> is invariant, which means we can't simply check to see if the result
-      /// 'is Task of object' and await the result.  
-      /// </remarks>
-      private static Func<object, Task<object>> CreateResultExtractor(MethodInfo method)
-      {
-        // check to see if the result is a Task, and extract it's type parameter if necessary.
-        Type ExtractResultType(Type type)
-        {
-          if (typeof(Task).IsAssignableFrom(type) && type.IsGenericType)
-          {
-            return type.GenericTypeArguments[0];
-          }
-
-          return type;
-        }
-
-        var resultType = ExtractResultType(method.ReturnType);
-
-        var genericMethod     = typeof(TargetFunction).GetMethod(nameof(ExtractResultAsync), BindingFlags.Static | BindingFlags.NonPublic);
-        var specializedMethod = genericMethod.MakeGenericMethod(resultType);
-
-        return (Func<object, Task<object>>) specializedMethod.CreateDelegate(typeof(Func<object, Task<object>>));
-      }
-
-      /// <summary>Extracts the result of the given <see cref="output"/> with the given expected inner type <see cref="T"/>.</summary>
-      private static async Task<object> ExtractResultAsync<T>(object output)
-      {
-        switch (output)
-        {
-          case Task<T> task:
-            return await task;
-
-          case Task task:
-            await task;
-            return default;
-
-          default:
-            return output;
-        }
+        return result is Task ? result : Task.FromResult(result);
       }
     }
   }

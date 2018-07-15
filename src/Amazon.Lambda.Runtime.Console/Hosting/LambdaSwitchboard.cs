@@ -11,8 +11,7 @@ namespace Amazon.Lambda.Hosting
   internal sealed class LambdaSwitchboard : BackgroundService
   {
     private readonly LambdaHandlerRegistration[] registrations;
-
-    private readonly IHost host;
+    private readonly IHost                       host;
 
     public LambdaSwitchboard(IEnumerable<LambdaHandlerRegistration> registrations, IHost host)
     {
