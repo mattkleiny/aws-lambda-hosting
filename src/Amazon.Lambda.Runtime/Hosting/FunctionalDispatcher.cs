@@ -13,17 +13,22 @@ namespace Amazon.Lambda.Hosting
 {
   /// <summary>A dispatcher for functional Lambda invocation with injected parameters.</summary>
   internal sealed class FunctionalDispatcher<THandler> : ILambdaHandler
+    where THandler : class
   {
     private readonly IHost            host;
     private readonly TargetFunction[] functions;
     private readonly MatchingStrategy isMatch;
 
     /// <summary>Discovers all of the <see cref="TargetFunction"/>s associated with <see cref="THandler"/>.</summary>
-    public static TargetFunction[] DiscoverFunctions() => typeof(THandler)
-      .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-      .Where(method => method.GetCustomAttribute<LambdaFunctionAttribute>() != null)
-      .Select(method => new TargetFunction(method, method.GetCustomAttribute<LambdaFunctionAttribute>().FunctionName))
-      .ToArray();
+    public static TargetFunction[] DiscoverFunctions() =>
+      // ReSharper disable once InvokeAsExtensionMethod
+      Enumerable.Concat(
+          typeof(THandler).GetMethods(BindingFlags.Public | BindingFlags.Instance),
+          typeof(THandler).GetMethods(BindingFlags.Public | BindingFlags.Static)
+        )
+        .Where(method => method.GetCustomAttribute<LambdaFunctionAttribute>() != null)
+        .Select(method => new TargetFunction(method, method.GetCustomAttribute<LambdaFunctionAttribute>().FunctionName))
+        .ToArray();
 
     public FunctionalDispatcher(IHost host, IOptions<HostingOptions> hostingOptions, TargetFunction[] functions)
     {
@@ -83,21 +88,20 @@ namespace Amazon.Lambda.Hosting
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
       public async Task<object> Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
       {
-        IEnumerable<object> PopulateParameters()
+        var arguments = parameters.Select(parameter =>
         {
-          foreach (var parameter in parameters)
-          {
-            if (parameter.ParameterType == typeof(object)) yield return input;
-            else if ("input".Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)) yield return input;
-            else if (parameter.ParameterType == typeof(ILambdaContext)) yield return context;
-            else if (parameter.ParameterType == typeof(IServiceProvider)) yield return services;
-            else if (parameter.ParameterType == typeof(CancellationToken)) yield return cancellationToken;
-            else yield return services.GetRequiredService(parameter.ParameterType);
-          }
-        }
+          if ("input".Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)) return input;
+          
+          if (parameter.ParameterType == typeof(object)) return input;
+          if (parameter.ParameterType == typeof(ILambdaContext)) return context;
+          if (parameter.ParameterType == typeof(IServiceProvider)) return services;
+          if (parameter.ParameterType == typeof(CancellationToken)) return cancellationToken;
+          
+          return services.GetRequiredService(parameter.ParameterType);
+        });
 
-        var handler = services.GetRequiredService<THandler>();
-        var result  = method.Invoke(handler, PopulateParameters().ToArray());
+        var handler = !method.IsStatic ? services.GetRequiredService<THandler>() : null;
+        var result  = method.Invoke(handler, arguments.ToArray());
 
         switch (result)
         {

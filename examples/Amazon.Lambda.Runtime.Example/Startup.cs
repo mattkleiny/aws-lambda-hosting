@@ -44,6 +44,12 @@ namespace Amazon.Lambda.Runtime.Example
     {
       return Task.FromResult<object>("Hello from Handler 4");
     }
+    
+    [LambdaFunction("handler-5")]
+    public static string Handler5(ILambdaContext context)
+    {
+      return $"Hello, from {context.FunctionName}!";
+    }
 
     [UsedImplicitly]
     public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
