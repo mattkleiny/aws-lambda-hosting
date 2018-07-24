@@ -23,5 +23,8 @@ namespace Amazon.Lambda.Hosting
 
     public static MatchingStrategy MatchByArnSuffix(StringComparison comparison = StringComparison.OrdinalIgnoreCase)
       => (registration, input, context) => context.InvokedFunctionArn.EndsWith(registration.FunctionName, comparison);
+
+    public static MatchingStrategy MatchByParsedArnFunctionName(StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+      => (registration, input, context) => LambdaARN.Parse(context.InvokedFunctionArn).FunctionName.Equals(registration.FunctionName, comparison);
   }
 }
