@@ -18,7 +18,7 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack.Handlers
       this.logger = logger;
     }
 
-    [LambdaFunction("handler-1")]
+    [LambdaFunction("arn:aws:lambda:region:123456789:function:function-name")]
     public void Handler1(IPocoDynamo dynamo)
     {
       var posts = dynamo.GetAll<BlogPost>().ToArray();
