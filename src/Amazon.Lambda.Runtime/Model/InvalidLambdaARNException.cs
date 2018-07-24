@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Amazon.Lambda.Hosting
+namespace Amazon.Lambda.Model
 {
   /// <summary>Indicates a failure to parse a <see cref="LambdaARN"/>.</summary>
   public sealed class InvalidLambdaARNException : Exception

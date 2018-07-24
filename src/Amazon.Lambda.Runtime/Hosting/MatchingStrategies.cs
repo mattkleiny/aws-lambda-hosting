@@ -1,5 +1,6 @@
 ﻿using System;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.Model;
 
 namespace Amazon.Lambda.Hosting
 {

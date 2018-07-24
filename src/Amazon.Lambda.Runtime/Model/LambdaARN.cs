@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Amazon.Lambda.Hosting
+namespace Amazon.Lambda.Model
 {
   /// <summary>Encapsulates a ARN for a lambda function in AWS and encapsulates it's individual components.</summary>
   public sealed class LambdaARN

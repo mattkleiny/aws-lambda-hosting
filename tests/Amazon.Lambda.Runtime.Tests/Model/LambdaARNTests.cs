@@ -1,7 +1,7 @@
-﻿using Amazon.Lambda.Hosting;
+﻿using Amazon.Lambda.Model;
 using Xunit;
 
-namespace Amazon.Lambda.Runtime.Tests.Hosting
+namespace Amazon.Lambda.Runtime.Tests.Model
 {
   public class LambdaARNTests
   {
