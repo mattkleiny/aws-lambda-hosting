@@ -14,6 +14,9 @@ namespace Amazon.Lambda.Hosting
     /// <summary>The <see cref="Services.RedirectTable"/> for the current environment.</summary>
     public RedirectTable RedirectTable { get; } = new RedirectTable();
 
+    /// <summary>The <see cref="Services.RedirectTable"/> for proxied network communication in the current environment.</summary>
+    public RedirectTable ProxyTable { get; } = new RedirectTable();
+
     /// <summary>General options for AWS-based services.</summary>
     public sealed class AmazonSettings
     {

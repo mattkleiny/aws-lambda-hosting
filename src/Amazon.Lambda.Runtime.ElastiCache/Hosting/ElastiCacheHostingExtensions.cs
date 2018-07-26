@@ -21,6 +21,14 @@ namespace Amazon.Lambda.Hosting
           config.ServiceURL = options.RedirectTable[WellKnownService.ElastiCache].ToString();
         }
 
+        if (options.ProxyTable.Contains(WellKnownService.ElastiCache))
+        {
+          var uri = options.ProxyTable[WellKnownService.ElastiCache];
+
+          config.ProxyHost = uri.Host;
+          config.ProxyPort = uri.Port;
+        }
+
         if (options.AWS.DefaultEndpoint != null)
         {
           config.RegionEndpoint = options.AWS.DefaultEndpoint;

@@ -21,6 +21,14 @@ namespace Amazon.Lambda.Hosting
           config.ServiceURL = options.RedirectTable[WellKnownService.Dynamo].ToString();
         }
 
+        if (options.ProxyTable.Contains(WellKnownService.Dynamo))
+        {
+          var uri = options.ProxyTable[WellKnownService.Dynamo];
+
+          config.ProxyHost = uri.Host;
+          config.ProxyPort = uri.Port;
+        }
+
         if (options.AWS.DefaultEndpoint != null)
         {
           config.RegionEndpoint = options.AWS.DefaultEndpoint;

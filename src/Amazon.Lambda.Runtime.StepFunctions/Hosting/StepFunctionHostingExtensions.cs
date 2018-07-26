@@ -16,9 +16,17 @@ namespace Amazon.Lambda.Hosting
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonStepFunctionsConfig();
 
-        if (options.RedirectTable.Contains(WellKnownService.SQS))
+        if (options.RedirectTable.Contains(WellKnownService.StepFunctions))
         {
-          config.ServiceURL = options.RedirectTable[WellKnownService.SQS].ToString();
+          config.ServiceURL = options.RedirectTable[WellKnownService.StepFunctions].ToString();
+        }
+
+        if (options.ProxyTable.Contains(WellKnownService.StepFunctions))
+        {
+          var uri = options.ProxyTable[WellKnownService.StepFunctions];
+
+          config.ProxyHost = uri.Host;
+          config.ProxyPort = uri.Port;
         }
 
         if (options.AWS.DefaultEndpoint != null)

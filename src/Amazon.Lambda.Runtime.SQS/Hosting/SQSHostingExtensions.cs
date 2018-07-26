@@ -21,6 +21,14 @@ namespace Amazon.Lambda.Hosting
           config.ServiceURL = options.RedirectTable[WellKnownService.SQS].ToString();
         }
 
+        if (options.ProxyTable.Contains(WellKnownService.SQS))
+        {
+          var uri = options.ProxyTable[WellKnownService.SQS];
+
+          config.ProxyHost = uri.Host;
+          config.ProxyPort = uri.Port;
+        }
+
         if (options.AWS.DefaultEndpoint != null)
         {
           config.RegionEndpoint = options.AWS.DefaultEndpoint;
