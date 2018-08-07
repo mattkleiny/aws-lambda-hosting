@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Amazon.Lambda.Hosting;
 using Amazon.Lambda.S3Events;
+using Amazon.Lambda.Testing;
 using Amazon.S3.Util;
 
-namespace Amazon.Lambda.Testing
+namespace Amazon.Lambda.Hosting.Testing
 {
   /// <summary>Extensions for simplifying interaction with S3.</summary>
   public static class S3LambdaTestExtensions

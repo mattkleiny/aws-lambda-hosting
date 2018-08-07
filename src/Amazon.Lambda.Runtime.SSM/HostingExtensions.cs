@@ -1,5 +1,5 @@
 ﻿using System;
-using Amazon.Lambda.Configuration;
+using Amazon.Lambda.Hosting.Configuration;
 using Amazon.Lambda.Services;
 using Amazon.SimpleSystemsManagement;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with SSM.</summary>
-  public static class SQSHostingExtensions
+  public static class HostingExtensions
   {
     /// <summary>Adds SSM support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddSSM(this IServiceCollection services)
@@ -56,7 +56,7 @@ namespace Amazon.Lambda.Hosting
       RegionEndpoint endpoint = null
     )
     {
-      var source = new SSMConfigurationSource(basePath, optional, reloadAfter, endpoint ?? AWSConfigs.RegionEndpoint);
+      var source = new ParameterStoreConfigurationSource(basePath, optional, reloadAfter, endpoint ?? AWSConfigs.RegionEndpoint);
 
       if (onException != null)
       {

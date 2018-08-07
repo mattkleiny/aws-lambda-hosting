@@ -4,14 +4,14 @@ using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
 using Microsoft.Extensions.Configuration;
 
-namespace Amazon.Lambda.Configuration
+namespace Amazon.Lambda.Hosting.Configuration
 {
   /// <summary>A <see cref="IConfigurationProvider"/> that talks to <see cref="IAmazonSimpleSystemsManagement"/>.</summary>
-  internal sealed class SSMConfigurationProvider : ConfigurationProvider
+  internal sealed class ParameterStoreConfigurationProvider : ConfigurationProvider
   {
-    private readonly SSMConfigurationSource source;
+    private readonly ParameterStoreConfigurationSource source;
 
-    public SSMConfigurationProvider(SSMConfigurationSource source)
+    public ParameterStoreConfigurationProvider(ParameterStoreConfigurationSource source)
     {
       this.source = source;
 

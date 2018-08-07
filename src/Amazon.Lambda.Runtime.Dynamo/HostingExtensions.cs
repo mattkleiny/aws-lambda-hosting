@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with DynamoDB.</summary>
-  public static class DynamoHostingExtensions
+  public static class HostingExtensions
   {
     /// <summary>Adds DynamoDB support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddDynamo(this IServiceCollection services)

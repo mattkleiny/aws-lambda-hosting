@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with ElastiCache.</summary>
-  public static class StepFunctionHostingExtensions
+  public static class HostingExtensions
   {
     /// <summary>Adds StepFunction support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddStepFunctions(this IServiceCollection services)

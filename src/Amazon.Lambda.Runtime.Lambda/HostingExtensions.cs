@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with Lambda.</summary>
-  public static class LambdaHostingExtensions
+  public static class HostingExtensions
   {
     /// <summary>Adds Lambda support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddLambda(this IServiceCollection services)

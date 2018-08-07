@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with S3.</summary>
-  public static class S3HostingExtensions
+  public static class HostingExtensions
   {
     /// <summary>Adds S3 support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddS3(this IServiceCollection services)

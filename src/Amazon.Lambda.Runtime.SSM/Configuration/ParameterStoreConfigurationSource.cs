@@ -3,16 +3,16 @@ using System.Timers;
 using Amazon.SimpleSystemsManagement;
 using Microsoft.Extensions.Configuration;
 
-namespace Amazon.Lambda.Configuration
+namespace Amazon.Lambda.Hosting.Configuration
 {
   /// <summary>A <see cref="IConfigurationSource"/> that talks to <see cref="IAmazonSimpleSystemsManagement"/>.</summary>
-  internal sealed class SSMConfigurationSource : IConfigurationSource, IDisposable
+  internal sealed class ParameterStoreConfigurationSource : IConfigurationSource, IDisposable
   {
     private readonly RegionEndpoint endpoint;
     private readonly bool           isOptional;
     private readonly Timer          timer;
 
-    public SSMConfigurationSource(string basePath, bool isOptional, TimeSpan? reloadInterval, RegionEndpoint endpoint)
+    public ParameterStoreConfigurationSource(string basePath, bool isOptional, TimeSpan? reloadInterval, RegionEndpoint endpoint)
     {
       this.isOptional = isOptional;
       this.endpoint   = endpoint;
@@ -35,7 +35,7 @@ namespace Amazon.Lambda.Configuration
 
     public IConfigurationProvider Build(IConfigurationBuilder builder)
     {
-      return new SSMConfigurationProvider(this);
+      return new ParameterStoreConfigurationProvider(this);
     }
 
     public void Dispose()
@@ -46,7 +46,7 @@ namespace Amazon.Lambda.Configuration
     /// <summary>Builds a <see cref="IAmazonSimpleSystemsManagement"/> client.</summary>
     internal IAmazonSimpleSystemsManagement BuildClient() => new AmazonSimpleSystemsManagementClient(endpoint);
 
-    /// <summary>Notifies of an <see cref="System.Exception"/> in a <see cref="SSMConfigurationProvider"/>, and relays it out to listeners.</summary>
+    /// <summary>Notifies of an <see cref="System.Exception"/> in a <see cref="ParameterStoreConfigurationProvider"/>, and relays it out to listeners.</summary>
     internal void NotifyException(Exception exception)
     {
       ExceptionObserved?.Invoke(exception);

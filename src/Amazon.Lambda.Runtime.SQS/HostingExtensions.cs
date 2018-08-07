@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Extensions for simplifying interaction with ElastiCache.</summary>
-  public static class SQSHostingExtensions
+  public static class HostingExtensions
   {
     /// <summary>Adds SQS support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddSQS(this IServiceCollection services)
