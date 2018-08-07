@@ -9,6 +9,7 @@ using Amazon.Lambda.Runtime.Example.ServiceStack.Model;
 using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,13 +34,22 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
     public static Task<object> ExecuteAsync(object input, ILambdaContext context)
       => HostBuilder.RunLambdaAsync(input, context);
 
+    public Startup(IHostingEnvironment environment, IConfiguration configuration)
+    {
+      Environment   = environment;
+      Configuration = configuration;
+    }
+
+    public IHostingEnvironment Environment   { get; }
+    public IConfiguration      Configuration { get; }
+
     [UsedImplicitly]
-    public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
+    public void ConfigureServices(IServiceCollection services)
     {
       services.AddLogging(builder =>
       {
         builder.AddLambdaLogger();
-        builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
+        builder.SetMinimumLevel(Environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
       });
 
       services.AddDynamo();
@@ -50,7 +60,7 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
 
       services.ConfigureHostingOptions(options =>
       {
-        if (environment.IsDevelopment())
+        if (Environment.IsDevelopment())
         {
           options.AWS.AccessKey = "A1B2C3D4E5";
           options.AWS.SecretKey = "A1B2C3D4E5";
@@ -62,11 +72,11 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
     }
 
     [UsedImplicitly]
-    public void Configure(IPocoDynamo dynamo, IHostingEnvironment environment)
+    public void Configure(IPocoDynamo dynamo)
     {
       dynamo.RegisterTable<BlogPost>();
 
-      if (environment.IsDevelopment())
+      if (Environment.IsDevelopment())
       {
         // asynchronously rebuild the development database
         Task.Factory.StartNew(() =>

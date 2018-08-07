@@ -25,23 +25,37 @@ namespace Amazon.Lambda.Hosting
     /// with ConfigureServices and Configure methods as appropriate.
     /// </summary>
     public static IHostBuilder UseStartup<TStartup>(this IHostBuilder builder)
-      where TStartup : class, new()
+      where TStartup : class
     {
-      var startup = new TStartup();
-
-      void ApplyServiceConventions(HostBuilderContext context, IServiceCollection collection)
+      void ConfigureStartup(HostBuilderContext context, IServiceCollection collection)
       {
-        Conventions.ConfigureServices(startup, builder, context.HostingEnvironment, context.Configuration, collection);
+        if (typeof(IStartup).IsAssignableFrom(typeof(TStartup)))
+        {
+          collection.AddSingleton(typeof(IStartup), typeof(TStartup));
+        }
+        else
+        {
+          collection.AddSingleton<TStartup>();
+          collection.AddSingleton<IStartup>(provider => new ConventionBasedStartup(
+            startup: provider.GetRequiredService<TStartup>(),
+            environment: context.HostingEnvironment
+          ));
+        }
       }
 
       void ApplyContainerConventions(HostBuilderContext context, IServiceCollection collection)
       {
-        var services = collection.BuildServiceProvider();
+        var baseServices = collection.BuildServiceProvider();
+        var startup      = baseServices.GetRequiredService<IStartup>();
 
-        Conventions.ConfigureEnvironment(startup, builder, context.HostingEnvironment, context.Configuration, services);
+        startup.ConfigureServices(collection);
+
+        var allServices = collection.BuildServiceProvider();
+
+        startup.Configure(allServices);
       }
 
-      builder.ConfigureServices(ApplyServiceConventions);
+      builder.ConfigureServices(ConfigureStartup);
       builder.ConfigureContainer<IServiceCollection>(ApplyContainerConventions);
 
       // this is supposed to be automatic, but it doesn't appear to work in the current release of the host builder

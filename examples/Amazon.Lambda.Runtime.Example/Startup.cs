@@ -10,6 +10,7 @@ using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
 using Amazon.S3;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,15 @@ namespace Amazon.Lambda.Runtime.Example
     public static Task<object> ExecuteAsync(object input, ILambdaContext context)
       => HostBuilder.RunLambdaAsync(input, context);
 
+    public Startup(IHostingEnvironment environment, IConfiguration configuration)
+    {
+      Environment   = environment;
+      Configuration = configuration;
+    }
+
+    public IHostingEnvironment Environment   { get; }
+    public IConfiguration      Configuration { get; }
+
     [LambdaFunction("handler-3")]
     public async Task<object> Handler3(object input, ITestService testService)
     {
@@ -52,12 +62,12 @@ namespace Amazon.Lambda.Runtime.Example
     }
 
     [UsedImplicitly]
-    public void ConfigureServices(IServiceCollection services, IHostingEnvironment environment)
+    public void ConfigureServices(IServiceCollection services)
     {
       services.AddLogging(builder =>
       {
         builder.AddLambdaLogger();
-        builder.SetMinimumLevel(environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
+        builder.SetMinimumLevel(Environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
       });
 
       services.AddDynamo();
@@ -76,7 +86,7 @@ namespace Amazon.Lambda.Runtime.Example
 
       services.ConfigureHostingOptions(options =>
       {
-        if (environment.IsDevelopment())
+        if (Environment.IsDevelopment())
         {
           options.AWS.AccessKey = "A1B2C3D4E5";
           options.AWS.SecretKey = "A1B2C3D4E5";
