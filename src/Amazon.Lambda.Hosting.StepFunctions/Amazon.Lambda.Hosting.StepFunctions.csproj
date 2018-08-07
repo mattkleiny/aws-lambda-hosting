@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Amazon.Lambda.Hosting</RootNamespace>
+    <Description>Support for StepFunction auto-configuration.</Description>
+  </PropertyGroup>
+  <Import Project="../../Shared.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Lambda.Hosting\Amazon.Lambda.Hosting.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.StepFunctions" Version="3.3.2.9" />
+  </ItemGroup>
+</Project>

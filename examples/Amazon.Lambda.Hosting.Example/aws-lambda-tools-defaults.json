@@ -1,0 +1,11 @@
+﻿{
+    "profile": "default",
+    "region": "ap-southeast-2",
+    "configuration": "Release",
+    "framework": "netcoreapp2.1",
+    "function-runtime": "dotnetcore2.1",
+    "function-memory-size": 128,
+    "function-timeout": 30,
+    "function-handler": "Amazon.Lambda.Hosting.Example::Amazon.Lambda.Hosting.Example.Startup::ExecuteAsync",
+    "function-name": "lambda-runtime-example-handler-1"
+}

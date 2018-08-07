@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting\Amazon.Lambda.Hosting.csproj" />
+  </ItemGroup>
+  <Import Project="../../Tests.props" />
+</Project>

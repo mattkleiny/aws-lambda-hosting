@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <RootNamespace>Amazon.Lambda</RootNamespace>
+    <Description>A set of extensions for running runtime based functions from the CLI.</Description>
+  </PropertyGroup>
+  <Import Project="../../Shared.props" />
+  <ItemGroup>
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Lambda.Hosting\Amazon.Lambda.Hosting.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Description>An example application of the Amazon.Lambda runtime.</Description>
+    <IsPackable>False</IsPackable>
+  </PropertyGroup>
+  <Import Project="../../Shared.props" />
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.Console\Amazon.Lambda.Hosting.Console.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.Dynamo\Amazon.Lambda.Hosting.Dynamo.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.ElastiCache\Amazon.Lambda.Hosting.ElastiCache.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.Lambda\Amazon.Lambda.Hosting.Lambda.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.S3\Amazon.Lambda.Hosting.S3.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.SNS\Amazon.Lambda.Hosting.SNS.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.SQS\Amazon.Lambda.Hosting.SQS.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.SSM\Amazon.Lambda.Hosting.SSM.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting.StepFunctions\Amazon.Lambda.Hosting.StepFunctions.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Hosting\Amazon.Lambda.Hosting.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+</Project>

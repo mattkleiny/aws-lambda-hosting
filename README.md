@@ -1,5 +1,5 @@
-[![aws-lambda-runtime MyGet Build Status](https://www.myget.org/BuildSource/Badge/aws-lambda-runtime?identifier=0c851967-560e-49a9-9705-ba70883a76d9)](https://www.myget.org/)
-# AWS Lambda Runtime
+[![aws-toolkit MyGet Build Status](https://www.myget.org/BuildSource/Badge/aws-toolkit?identifier=9cf127f4-ad3d-42b7-9e0f-7a3e352fc864)](https://www.myget.org/)
+# AWS Lambda Hosting
 
 A mechanism for bootstrapping and integration testing .NET Core based AWS Lambda functions.
 
