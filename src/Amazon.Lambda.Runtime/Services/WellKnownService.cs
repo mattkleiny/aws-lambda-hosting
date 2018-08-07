@@ -7,6 +7,7 @@
     ElastiCache,
     S3,
     SNS,
+    SSM,
     SQS,
     Lambda,
     StepFunctions
