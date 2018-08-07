@@ -85,6 +85,7 @@ namespace Amazon.Lambda.Runtime.Example
       services.AddS3();
       services.AddSNS();
       services.AddSQS();
+      services.AddSSM();
       services.AddStepFunctions();
 
       services.AddHandler<Handler1>();

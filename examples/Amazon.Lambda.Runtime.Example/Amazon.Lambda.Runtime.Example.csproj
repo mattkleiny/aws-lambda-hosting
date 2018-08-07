@@ -19,10 +19,14 @@
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.S3\Amazon.Lambda.Runtime.S3.csproj" />
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.SNS\Amazon.Lambda.Runtime.SNS.csproj" />
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.SQS\Amazon.Lambda.Runtime.SQS.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.SSM\Amazon.Lambda.Runtime.SSM.csproj" />
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime.StepFunctions\Amazon.Lambda.Runtime.StepFunctions.csproj" />
     <ProjectReference Include="..\..\src\Amazon.Lambda.Runtime\Amazon.Lambda.Runtime.csproj" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

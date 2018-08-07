@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Amazon.Lambda.Hosting
 {
-  /// <summary>Extensions for simplifying interaction with ElastiCache.</summary>
+  /// <summary>Extensions for simplifying interaction with SNS.</summary>
   public static class SNSHostingExtensions
   {
     /// <summary>Adds SNS support to the <see cref="IServiceCollection"/>.</summary>

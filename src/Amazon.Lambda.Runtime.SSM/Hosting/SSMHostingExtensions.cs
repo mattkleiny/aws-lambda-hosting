@@ -1,5 +1,8 @@
-﻿using Amazon.Lambda.Services;
+﻿using System;
+using Amazon.Lambda.Configuration;
+using Amazon.Lambda.Services;
 using Amazon.SimpleSystemsManagement;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -41,6 +44,28 @@ namespace Amazon.Lambda.Hosting
 
         return new AmazonSimpleSystemsManagementClient(config);
       });
+    }
+
+    /// <summary>Adds the SSM parameter store as a configuration source to the given <see cref="IConfigurationBuilder"/>.</summary>
+    public static IConfigurationBuilder AddParameterStore(
+      this IConfigurationBuilder builder,
+      string basePath,
+      bool optional = false,
+      TimeSpan? reloadAfter = null,
+      Action<Exception> onException = null,
+      RegionEndpoint endpoint = null
+    )
+    {
+      var source = new SSMConfigurationSource(basePath, optional, reloadAfter, endpoint ?? AWSConfigs.RegionEndpoint);
+
+      if (onException != null)
+      {
+        source.ExceptionObserved += onException;
+      }
+
+      builder.Add(source);
+
+      return builder;
     }
   }
 }

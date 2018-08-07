@@ -23,6 +23,17 @@ namespace Amazon.Lambda.Runtime.Example.ServiceStack
   {
     /// <summary>The <see cref="IHostBuilder"/> for this example.</summary>
     public static IHostBuilder HostBuilder => new HostBuilder()
+      .ConfigureAppConfiguration((context, builder) =>
+      {
+        var environment = context.HostingEnvironment.EnvironmentName;
+
+        builder.AddJsonFile("appsettings.json",               optional: true, reloadOnChange: true);
+        builder.AddJsonFile($"appsettings{environment}.json", optional: true, reloadOnChange: true);
+
+        builder.AddParameterStore(basePath: "/lambda-runtime-example", optional: true, reloadAfter: TimeSpan.FromMinutes(1));
+
+        builder.AddEnvironmentVariables();
+      })
       .UseStartup<Startup>();
 
     /// <summary>This is the entry point from the CLI.</summary>
