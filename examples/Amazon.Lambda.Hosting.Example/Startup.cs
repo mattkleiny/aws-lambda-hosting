@@ -54,7 +54,7 @@ namespace Amazon.Lambda.Hosting.Example
     [LambdaFunction("handler-3")]
     public async Task<object> Handler3(object input, ILambdaContext context, ITestService testService, IServiceProvider services)
     {
-      var (handler, metadata) = services.ResolveLambdaHandlerWithMetadata(input, context);
+      var (handler, metadata) = services.ResolveLambdaHandlerWithMetadata(context);
 
       return await testService.GetMessageAsync();
     }

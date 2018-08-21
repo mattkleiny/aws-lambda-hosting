@@ -46,7 +46,7 @@ namespace Amazon.Lambda.Hosting
 
       foreach (var function in functions)
       {
-        if (isMatch(function.Metadata, input, context))
+        if (isMatch(function.Metadata, context))
         {
           return await function.Invoke(input, context, host.Services, cancellationToken);
         }

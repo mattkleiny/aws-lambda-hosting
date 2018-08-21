@@ -111,7 +111,9 @@ namespace Amazon.Lambda.Hosting.Embedding
 
     public virtual Task<InvokeAsyncResponse> InvokeAsyncAsync(InvokeAsyncRequest request, CancellationToken cancellationToken = new CancellationToken())
     {
+#pragma warning disable 618
       return Client.InvokeAsyncAsync(request, cancellationToken);
+#pragma warning restore 618
     }
 
     public virtual Task<ListAliasesResponse> ListAliasesAsync(ListAliasesRequest request, CancellationToken cancellationToken = new CancellationToken())

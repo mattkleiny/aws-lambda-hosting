@@ -30,7 +30,7 @@ namespace Amazon.Lambda.Hosting.Embedding
       var input   = request.Payload;
       var context = LambdaContext.ForFunction(request.FunctionName);
 
-      if (!services.TryResolveLambdaHandler(input, context, out var handler))
+      if (!services.TryResolveLambdaHandler(context, out var handler))
       {
         return await base.InvokeAsync(request, cancellationToken);
       }

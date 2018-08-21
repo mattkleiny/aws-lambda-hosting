@@ -82,18 +82,18 @@ namespace Amazon.Lambda.Hosting
 
       using (var scope = host.Services.CreateScope())
       {
-        var handler = scope.ServiceProvider.ResolveLambdaHandler(input, context);
+        var handler = scope.ServiceProvider.ResolveLambdaHandler(context);
 
         return await handler.ExecuteAsync(input, context, cancellationToken);
       }
     }
 
     /// <summary>Resolves the appropriate <see cref="LambdaHandlerMetadata"/> for the given context.</summary>
-    public static LambdaHandlerMetadata ResolveLambdaHandlerMetadata(this IServiceProvider services, object input, ILambdaContext context)
+    public static LambdaHandlerMetadata ResolveLambdaHandlerMetadata(this IServiceProvider services, ILambdaContext context)
     {
       Check.NotNull(context, nameof(context));
 
-      if (!services.TryResolveLambdaHandlerMetadata(input, context, out var metadata))
+      if (!services.TryResolveLambdaHandlerMetadata(context, out var metadata))
       {
         throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
       }
@@ -102,14 +102,16 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Attempts to resolve the <see cref="LambdaHandlerMetadata"/> for the given context.</summary>
-    public static bool TryResolveLambdaHandlerMetadata(this IServiceProvider services, object input, ILambdaContext context, out LambdaHandlerMetadata result)
+    public static bool TryResolveLambdaHandlerMetadata(this IServiceProvider services, ILambdaContext context, out LambdaHandlerMetadata result)
     {
+      Check.NotNull(context, nameof(context));
+      
       var metadatas = services.GetServices<LambdaHandlerMetadata>();
       var isMatch   = services.GetRequiredService<IOptions<HostingOptions>>().Value.MatchingStrategy;
 
       foreach (var metadata in metadatas)
       {
-        if (isMatch(metadata, input, context))
+        if (isMatch(metadata, context))
         {
           result = metadata;
           return true;
@@ -121,11 +123,11 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Resolves the appropriate <see cref="ILambdaHandler"/> for the given context.</summary>
-    public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, object input, ILambdaContext context)
+    public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, ILambdaContext context)
     {
       Check.NotNull(context, nameof(context));
 
-      if (!services.TryResolveLambdaHandler(input, context, out var handler))
+      if (!services.TryResolveLambdaHandler(context, out var handler))
       {
         throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
       }
@@ -134,11 +136,11 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Attempts to resolve the <see cref="ILambdaHandler"/> for the given context.</summary>
-    public static bool TryResolveLambdaHandler(this IServiceProvider services, object input, ILambdaContext context, out ILambdaHandler handler)
+    public static bool TryResolveLambdaHandler(this IServiceProvider services, ILambdaContext context, out ILambdaHandler handler)
     {
       Check.NotNull(context, nameof(context));
 
-      if (services.TryResolveLambdaHandlerMetadata(input, context, out var metadata))
+      if (services.TryResolveLambdaHandlerMetadata(context, out var metadata))
       {
         handler = (ILambdaHandler) services.GetRequiredService(metadata.HandlerType);
         return true;
@@ -149,11 +151,11 @@ namespace Amazon.Lambda.Hosting
     }
 
     /// <summary>Resolves the <see cref="ILambdaHandler"/> and it's associated <see cref="LambdaHandlerMetadata"/>.</summary>
-    public static (ILambdaHandler, LambdaHandlerMetadata) ResolveLambdaHandlerWithMetadata(this IServiceProvider services, object input, ILambdaContext context)
+    public static (ILambdaHandler, LambdaHandlerMetadata) ResolveLambdaHandlerWithMetadata(this IServiceProvider services, ILambdaContext context)
     {
       Check.NotNull(context, nameof(context));
 
-      var metadata = services.ResolveLambdaHandlerMetadata(input, context);
+      var metadata = services.ResolveLambdaHandlerMetadata(context);
       var handler  = (ILambdaHandler) services.GetRequiredService(metadata.HandlerType);
 
       return (handler, metadata);
