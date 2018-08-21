@@ -9,7 +9,7 @@ namespace Amazon.Lambda.Testing
   internal sealed class LambdaUnderTest<THandler> : ILambdaUnderTest<THandler>
     where THandler : class, ILambdaHandler
   {
-    public LambdaUnderTest(TestLambdaContext context, THandler handler, IServiceProvider services)
+    public LambdaUnderTest(LambdaContext context, THandler handler, IServiceProvider services)
     {
       Check.NotNull(context,  nameof(context));
       Check.NotNull(handler,  nameof(handler));
@@ -20,9 +20,9 @@ namespace Amazon.Lambda.Testing
       Services = services;
     }
 
-    public TestLambdaContext Context  { get; }
-    public THandler          Handler  { get; }
-    public IServiceProvider  Services { get; }
+    public LambdaContext    Context  { get; }
+    public THandler         Handler  { get; }
+    public IServiceProvider Services { get; }
 
     public Task<object> ExecuteAsync(object input, CancellationToken cancellationToken)
     {

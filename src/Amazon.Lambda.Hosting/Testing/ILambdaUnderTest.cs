@@ -13,9 +13,9 @@ namespace Amazon.Lambda.Testing
   public interface ILambdaUnderTest<out THandler>
     where THandler : class, ILambdaHandler
   {
-    TestLambdaContext Context  { get; }
-    THandler          Handler  { get; }
-    IServiceProvider  Services { get; }
+    LambdaContext    Context  { get; }
+    THandler         Handler  { get; }
+    IServiceProvider Services { get; }
 
     Task<object> ExecuteAsync(object input, CancellationToken cancellationToken = default);
   }

@@ -26,7 +26,7 @@ namespace Amazon.Lambda.Hosting.Benchmarks
     [Benchmark]
     public async Task WithTransientHostAsync()
     {
-      var context = new LocalLambdaContext("handler-1");
+      var context = LambdaContext.ForFunction("handler-1");
 
       await Startup.HostBuilder.RunLambdaAsync("hello, world!", context);
     }
@@ -34,7 +34,7 @@ namespace Amazon.Lambda.Hosting.Benchmarks
     [Benchmark]
     public async Task WithCachedHostAsync()
     {
-      var context = new LocalLambdaContext("handler-1");
+      var context = LambdaContext.ForFunction("handler-1");
 
       await Startup.Host.RunLambdaAsync("hello, world!", context);
     }
@@ -42,7 +42,7 @@ namespace Amazon.Lambda.Hosting.Benchmarks
     [Benchmark]
     public async Task WithoutHostAsync()
     {
-      var context = new LocalLambdaContext("handler-1");
+      var context = LambdaContext.ForFunction("handler-1");
       var startup = new Startup();
 
       await startup.Handler1("hello, world!", context);

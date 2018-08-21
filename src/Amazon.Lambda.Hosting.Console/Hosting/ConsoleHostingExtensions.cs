@@ -43,7 +43,7 @@ namespace Amazon.Lambda.Hosting
 
           // TODO: pre-process the input into the expected format
 
-          var context = new LocalLambdaContext(function);
+          var context = LambdaContext.ForFunction(function);
           var output  = await builder.RunLambdaAsync(input, context, cancellationToken);
 
           if (output != null)

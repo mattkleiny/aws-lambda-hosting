@@ -62,7 +62,7 @@ namespace Amazon.Lambda.Hosting
         // TODO: support various types of input here
         // TODO: support cancellation of long-running invocations here
 
-        var context = new LocalLambdaContext(registration.FunctionName);
+        var context = LambdaContext.ForFunction(registration.FunctionName);
         var result  = await host.RunLambdaAsync(null, context, cancellationToken);
 
         Console.WriteLine(result);
