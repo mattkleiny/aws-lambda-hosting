@@ -10,7 +10,7 @@
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.3.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0" />
     <PackageReference Include="ServiceStack.Aws.Core" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
