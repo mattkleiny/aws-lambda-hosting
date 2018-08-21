@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Diagnostics;
-using Amazon.Lambda.Hosting;
 using Amazon.Lambda.Hosting.Example.Handlers;
 using Amazon.Lambda.Hosting.Example.Services;
 using Amazon.Lambda.Serialization.Json;
@@ -53,8 +52,10 @@ namespace Amazon.Lambda.Hosting.Example
     public IConfiguration      Configuration { get; }
 
     [LambdaFunction("handler-3")]
-    public async Task<object> Handler3(object input, ITestService testService)
+    public async Task<object> Handler3(object input, ILambdaContext context, ITestService testService, IServiceProvider services)
     {
+      var (handler, metadata) = services.ResolveLambdaHandlerWithMetadata(input, context);
+
       return await testService.GetMessageAsync();
     }
 

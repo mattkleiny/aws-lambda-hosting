@@ -10,16 +10,16 @@ namespace Amazon.Lambda.Hosting
   /// <summary>A service which displays a menu of all the attached <see cref="ILambdaHandler"/>s and permits their execution.</summary>
   internal sealed class LambdaSwitchboard : BackgroundService
   {
-    private readonly LambdaHandlerRegistration[] registrations;
-    private readonly IHost                       host;
+    private readonly LambdaHandlerMetadata[] metadatas;
+    private readonly IHost                   host;
 
-    public LambdaSwitchboard(IEnumerable<LambdaHandlerRegistration> registrations, IHost host)
+    public LambdaSwitchboard(IEnumerable<LambdaHandlerMetadata> metadatas, IHost host)
     {
-      Check.NotNull(registrations, nameof(registrations));
-      Check.NotNull(host,          nameof(host));
+      Check.NotNull(metadatas, nameof(metadatas));
+      Check.NotNull(host, nameof(host));
 
-      this.registrations = registrations.ToArray();
-      this.host          = host;
+      this.metadatas = metadatas.ToArray();
+      this.host      = host;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,11 +40,11 @@ namespace Amazon.Lambda.Hosting
       Console.WriteLine("Welcome to the lambda switchboard.");
       Console.WriteLine("Please make your selection below:");
 
-      for (var index = 0; index < registrations.Length; index++)
+      for (var index = 0; index < metadatas.Length; index++)
       {
-        var registration = registrations[index];
+        var metadata = metadatas[index];
 
-        Console.WriteLine($"[{index}] - {registration.FunctionName} mapped to {registration.FriendlyName}");
+        Console.WriteLine($"[{index}] - {metadata.FunctionName} mapped to {metadata.FriendlyName}");
       }
 
       while (!cancellationToken.IsCancellationRequested)
@@ -53,16 +53,16 @@ namespace Amazon.Lambda.Hosting
         Console.Write("> ");
 
         if (!int.TryParse(Console.ReadLine(), out var option)) continue;
-        if (option < 0 || option >= registrations.Length) continue;
+        if (option < 0 || option >= metadatas.Length) continue;
 
-        var registration = registrations[option];
+        var metadata = metadatas[option];
 
-        Console.WriteLine($"Executing {registration.FriendlyName}");
+        Console.WriteLine($"Executing {metadata.FriendlyName}");
 
         // TODO: support various types of input here
         // TODO: support cancellation of long-running invocations here
 
-        var context = LambdaContext.ForFunction(registration.FunctionName);
+        var context = LambdaContext.ForFunction(metadata.FunctionName);
         var result  = await host.RunLambdaAsync(null, context, cancellationToken);
 
         Console.WriteLine(result);

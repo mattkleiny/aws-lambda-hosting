@@ -88,6 +88,38 @@ namespace Amazon.Lambda.Hosting
       }
     }
 
+    /// <summary>Resolves the appropriate <see cref="LambdaHandlerMetadata"/> for the given context.</summary>
+    public static LambdaHandlerMetadata ResolveLambdaHandlerMetadata(this IServiceProvider services, object input, ILambdaContext context)
+    {
+      Check.NotNull(context, nameof(context));
+
+      if (!services.TryResolveLambdaHandlerMetadata(input, context, out var metadata))
+      {
+        throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
+      }
+
+      return metadata;
+    }
+
+    /// <summary>Attempts to resolve the <see cref="LambdaHandlerMetadata"/> for the given context.</summary>
+    public static bool TryResolveLambdaHandlerMetadata(this IServiceProvider services, object input, ILambdaContext context, out LambdaHandlerMetadata result)
+    {
+      var metadatas = services.GetServices<LambdaHandlerMetadata>();
+      var isMatch   = services.GetRequiredService<IOptions<HostingOptions>>().Value.MatchingStrategy;
+
+      foreach (var metadata in metadatas)
+      {
+        if (isMatch(metadata, input, context))
+        {
+          result = metadata;
+          return true;
+        }
+      }
+
+      result = null;
+      return false;
+    }
+
     /// <summary>Resolves the appropriate <see cref="ILambdaHandler"/> for the given context.</summary>
     public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, object input, ILambdaContext context)
     {
@@ -106,20 +138,25 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(context, nameof(context));
 
-      var registrations = services.GetServices<LambdaHandlerRegistration>();
-      var isMatch       = services.GetRequiredService<IOptions<HostingOptions>>().Value.MatchingStrategy;
-
-      foreach (var registration in registrations)
+      if (services.TryResolveLambdaHandlerMetadata(input, context, out var metadata))
       {
-        if (isMatch(registration, input, context))
-        {
-          handler = (ILambdaHandler) services.GetService(registration.HandlerType);
-          return true;
-        }
+        handler = (ILambdaHandler) services.GetRequiredService(metadata.HandlerType);
+        return true;
       }
 
       handler = null;
       return false;
+    }
+
+    /// <summary>Resolves the <see cref="ILambdaHandler"/> and it's associated <see cref="LambdaHandlerMetadata"/>.</summary>
+    public static (ILambdaHandler, LambdaHandlerMetadata) ResolveLambdaHandlerWithMetadata(this IServiceProvider services, object input, ILambdaContext context)
+    {
+      Check.NotNull(context, nameof(context));
+
+      var metadata = services.ResolveLambdaHandlerMetadata(input, context);
+      var handler  = (ILambdaHandler) services.GetRequiredService(metadata.HandlerType);
+
+      return (handler, metadata);
     }
 
     /// <summary>Maps the given <see cref="ILambdaHandler"/> with it's associate <see cref="LambdaFunctionAttribute.FunctionName"/> in the host.</summary>
@@ -143,11 +180,7 @@ namespace Amazon.Lambda.Hosting
       Check.NotNullOrEmpty(functionName, nameof(functionName));
 
       services.AddScoped<THandler>();
-      services.AddSingleton(new LambdaHandlerRegistration(
-        functionName: functionName,
-        handlerType: typeof(THandler),
-        friendlyName: typeof(THandler).Name
-      ));
+      services.AddSingleton(LambdaHandlerMetadata.ForStronglyTyped<THandler>(functionName));
 
       return services;
     }
@@ -172,11 +205,7 @@ namespace Amazon.Lambda.Hosting
 
       foreach (var function in functions)
       {
-        services.AddSingleton(new LambdaHandlerRegistration(
-          function.FunctionName,
-          handlerType: typeof(FunctionalDispatcher<THandler>),
-          friendlyName: function.FriendlyName
-        ));
+        services.AddSingleton(function.Metadata);
       }
 
       return services;

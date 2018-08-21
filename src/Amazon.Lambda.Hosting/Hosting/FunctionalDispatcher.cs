@@ -46,7 +46,7 @@ namespace Amazon.Lambda.Hosting
 
       foreach (var function in functions)
       {
-        if (isMatch(function.Registration, input, context))
+        if (isMatch(function.Metadata, input, context))
         {
           return await function.Invoke(input, context, host.Services, cancellationToken);
         }
@@ -70,18 +70,14 @@ namespace Amazon.Lambda.Hosting
         parameters  = method.GetParameters().ToArray();
 
         FunctionName = functionName;
-        Registration = new LambdaHandlerRegistration(
-          functionName: functionName,
-          typeof(THandler),
-          friendlyName: method.Name
-        );
+        Metadata = LambdaHandlerMetadata.ForFunctional(this);
       }
 
       public string FunctionName { get; }
       public string FriendlyName => method.Name;
 
-      /// <summary>A <see cref="LambdaHandlerRegistration"/> just to keep the matching strategies consistent.</summary>
-      internal LambdaHandlerRegistration Registration { get; }
+      /// <summary>A <see cref="LambdaHandlerMetadata"/> just to keep the matching strategies consistent.</summary>
+      internal LambdaHandlerMetadata Metadata { get; }
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
       public dynamic Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)
