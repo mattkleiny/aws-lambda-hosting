@@ -80,12 +80,15 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(context, nameof(context));
 
-      var handler = host.Services.ResolveLambdaHandler(input, context);
+      using (var scope = host.Services.CreateScope())
+      {
+        var handler = scope.ServiceProvider.ResolveLambdaHandler(input, context);
 
-      return await handler.ExecuteAsync(input, context, cancellationToken);
+        return await handler.ExecuteAsync(input, context, cancellationToken);
+      }
     }
 
-    /// <summary>Resolves the appropraite <see cref="ILambdaHandler"/> for the given context.</summary>
+    /// <summary>Resolves the appropriate <see cref="ILambdaHandler"/> for the given context.</summary>
     public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, object input, ILambdaContext context)
     {
       Check.NotNull(context, nameof(context));

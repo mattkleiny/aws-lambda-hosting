@@ -36,6 +36,9 @@ namespace Amazon.Lambda.Hosting.Example.ServiceStack
       })
       .UseStartup<Startup>();
 
+    /// <summary>The cached <see cref="IHost"/> for this application.</summary>
+    public static IHost Host { get; } = HostBuilder.Build();
+
     /// <summary>This is the entry point from the CLI.</summary>
     public static Task<int> Main(string[] args)
       => HostBuilder.RunLambdaConsoleAsync(args);
