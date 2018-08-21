@@ -36,6 +36,13 @@ namespace Amazon.Lambda.Hosting
       };
     }
 
+    public static LambdaContext ForARN(string arn)
+    {
+      Check.NotNullOrEmpty(arn, nameof(arn));
+
+      return ForARN(LambdaARN.Parse(arn));
+    }
+
     public static LambdaContext ForARN(LambdaARN arn)
     {
       Check.NotNull(arn, nameof(arn));

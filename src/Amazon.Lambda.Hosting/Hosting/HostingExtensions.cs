@@ -90,6 +90,19 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(context, nameof(context));
 
+      if (!services.TryResolveLambdaHandler(input, context, out var handler))
+      {
+        throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
+      }
+
+      return handler;
+    }
+
+    /// <summary>Attempts to resolve the <see cref="ILambdaHandler"/> for the given context.</summary>
+    public static bool TryResolveLambdaHandler(this IServiceProvider services, object input, ILambdaContext context, out ILambdaHandler handler)
+    {
+      Check.NotNull(context, nameof(context));
+
       var registrations = services.GetServices<LambdaHandlerRegistration>();
       var isMatch       = services.GetRequiredService<IOptions<HostingOptions>>().Value.MatchingStrategy;
 
@@ -97,11 +110,13 @@ namespace Amazon.Lambda.Hosting
       {
         if (isMatch(registration, input, context))
         {
-          return (ILambdaHandler) services.GetService(registration.HandlerType);
+          handler = (ILambdaHandler) services.GetService(registration.HandlerType);
+          return true;
         }
       }
 
-      throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
+      handler = null;
+      return false;
     }
 
     /// <summary>Maps the given <see cref="ILambdaHandler"/> with it's associate <see cref="LambdaFunctionAttribute.FunctionName"/> in the host.</summary>
