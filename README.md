@@ -1,4 +1,4 @@
-[![aws-toolkit MyGet Build Status](https://www.myget.org/BuildSource/Badge/aws-toolkit?identifier=9cf127f4-ad3d-42b7-9e0f-7a3e352fc864)](https://www.myget.org/)
+[![aws-toolkit MyGet Build Status](https://www.myget.org/BuildSource/Badge/aws-toolkit?identifier=5fe50e2a-ee69-4be2-ac3d-f1cb64432e28)](https://www.myget.org/)
 # AWS Lambda Hosting
 
 A mechanism for bootstrapping and integration testing .NET Core based AWS Lambda functions.
