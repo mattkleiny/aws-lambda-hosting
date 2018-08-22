@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds StepFunction support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddStepFunctions(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonStepFunctions>(provider =>
+      return services.AddScoped<IAmazonStepFunctions>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonStepFunctionsConfig();

@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds ElastiCache support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddElastiCache(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonElastiCache>(provider =>
+      return services.AddScoped<IAmazonElastiCache>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonElastiCacheConfig();

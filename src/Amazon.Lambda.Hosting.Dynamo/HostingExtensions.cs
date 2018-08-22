@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds DynamoDB support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddDynamo(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonDynamoDB>(provider =>
+      return services.AddScoped<IAmazonDynamoDB>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonDynamoDBConfig();

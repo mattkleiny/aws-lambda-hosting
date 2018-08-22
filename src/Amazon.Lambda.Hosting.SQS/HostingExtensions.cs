@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds SQS support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddSQS(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonSQS>(provider =>
+      return services.AddScoped<IAmazonSQS>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonSQSConfig();

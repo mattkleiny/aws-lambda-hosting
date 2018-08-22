@@ -14,7 +14,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds SSM support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddSSM(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonSimpleSystemsManagement>(provider =>
+      return services.AddScoped<IAmazonSimpleSystemsManagement>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonSimpleSystemsManagementConfig();

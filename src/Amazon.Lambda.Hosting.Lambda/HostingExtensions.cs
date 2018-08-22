@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds Lambda support to the <see cref="IServiceCollection"/> with optional local embedding, which permits call-backs into the local lambda host.</summary>
     public static IServiceCollection AddLambda(this IServiceCollection services, bool enableEmbedding = false)
     {
-      return services.AddSingleton<IAmazonLambda>(provider =>
+      return services.AddScoped<IAmazonLambda>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var client  = BuildLambdaClient(options);

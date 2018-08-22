@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds SNS support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddSNS(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonSimpleNotificationService>(provider =>
+      return services.AddScoped<IAmazonSimpleNotificationService>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonSimpleNotificationServiceConfig();

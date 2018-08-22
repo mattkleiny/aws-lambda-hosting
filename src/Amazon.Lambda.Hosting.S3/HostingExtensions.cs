@@ -11,7 +11,7 @@ namespace Amazon.Lambda.Hosting
     /// <summary>Adds S3 support to the <see cref="IServiceCollection"/>.</summary>
     public static IServiceCollection AddS3(this IServiceCollection services)
     {
-      return services.AddSingleton<IAmazonS3>(provider =>
+      return services.AddScoped<IAmazonS3>(provider =>
       {
         var options = provider.GetRequiredService<IOptions<HostingOptions>>().Value;
         var config  = new AmazonS3Config();
