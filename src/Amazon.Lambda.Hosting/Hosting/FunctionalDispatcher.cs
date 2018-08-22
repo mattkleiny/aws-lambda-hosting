@@ -94,8 +94,7 @@ namespace Amazon.Lambda.Hosting
           return services.GetRequiredService(parameter.ParameterType);
         });
 
-        // static methods don't require a 'this' parameter, and can simply specify null
-        var handler = !method.IsStatic ? services.GetRequiredService<THandler>() : null;
+        var handler = method.IsStatic ? null : services.GetRequiredService<THandler>();
         var result  = method.Invoke(handler, arguments.ToArray());
 
         return result is Task ? result : Task.FromResult(result);

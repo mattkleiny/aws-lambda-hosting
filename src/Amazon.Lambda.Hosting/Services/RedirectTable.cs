@@ -34,7 +34,7 @@ namespace Amazon.Lambda.Services
       }
       set
       {
-        Check.That(value.IsAbsoluteUri, "The URI provided for {service} needs to be absolute");
+        Check.That(value.IsAbsoluteUri, $"The URI provided for {service} needs to be absolute");
 
         entries[service] = value;
       }

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Amazon.Lambda.Model
 {
@@ -15,7 +16,7 @@ namespace Amazon.Lambda.Model
       var match = Regex.Match(arn);
       if (!match.Success)
       {
-        throw new InvalidLambdaARNException(arn);
+        throw new Exception($"{arn} is not a valid lambda ARN");
       }
 
       var region       = RegionEndpoint.GetBySystemName(match.Groups[1].Value);
