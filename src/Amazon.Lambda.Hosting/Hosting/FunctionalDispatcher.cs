@@ -70,7 +70,7 @@ namespace Amazon.Lambda.Hosting
         parameters  = method.GetParameters().ToArray();
 
         FunctionName = functionName;
-        Metadata = LambdaHandlerMetadata.ForFunctional(this);
+        Metadata     = LambdaHandlerMetadata.ForFunction(this);
       }
 
       public string FunctionName { get; }

@@ -7,7 +7,7 @@ namespace Amazon.Lambda.Hosting
   {
     // TODO: add input/output types
 
-    internal static LambdaHandlerMetadata ForStronglyTyped<THandler>(string functionName)
+    internal static LambdaHandlerMetadata ForHandler<THandler>(string functionName)
       where THandler : class, ILambdaHandler
     {
       Check.NotNullOrEmpty(functionName, nameof(functionName));
@@ -16,13 +16,15 @@ namespace Amazon.Lambda.Hosting
       {
         HandlerType  = typeof(THandler),
         FunctionName = functionName,
-        FriendlyName = typeof(THandler).Name
+        FriendlyName = typeof(THandler).Name,
       };
     }
 
-    internal static LambdaHandlerMetadata ForFunctional<THandler>(FunctionalDispatcher<THandler>.TargetFunction function)
+    internal static LambdaHandlerMetadata ForFunction<THandler>(FunctionalDispatcher<THandler>.TargetFunction function)
       where THandler : class
     {
+      Check.NotNull(function, nameof(function));
+
       return new LambdaHandlerMetadata
       {
         HandlerType  = typeof(FunctionalDispatcher<THandler>),
@@ -35,11 +37,11 @@ namespace Amazon.Lambda.Hosting
     {
     }
 
-    public string FunctionName { get; private set; }
     public Type   HandlerType  { get; private set; }
+    public string FunctionName { get; private set; }
+    public string FriendlyName { get; private set; }
     public Type   InputType    { get; private set; }
     public Type   OutputType   { get; private set; }
-    public string FriendlyName { get; private set; }
 
     private bool Equals(LambdaHandlerMetadata other)
     {

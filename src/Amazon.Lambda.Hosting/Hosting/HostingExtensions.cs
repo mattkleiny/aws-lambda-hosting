@@ -182,7 +182,7 @@ namespace Amazon.Lambda.Hosting
       Check.NotNullOrEmpty(functionName, nameof(functionName));
 
       services.AddScoped<THandler>();
-      services.AddSingleton(LambdaHandlerMetadata.ForStronglyTyped<THandler>(functionName));
+      services.AddSingleton(LambdaHandlerMetadata.ForHandler<THandler>(functionName));
 
       return services;
     }
