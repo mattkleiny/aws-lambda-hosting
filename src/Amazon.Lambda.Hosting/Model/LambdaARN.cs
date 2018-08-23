@@ -27,12 +27,7 @@ namespace Amazon.Lambda.Model
       return new LambdaARN(region, accountId, functionName, qualifier);
     }
 
-    public LambdaARN(RegionEndpoint region, long accountId, string functionName)
-      : this(region, accountId, functionName, null)
-    {
-    }
-
-    public LambdaARN(RegionEndpoint region, long accountId, string functionName, string qualifier)
+    public LambdaARN(RegionEndpoint region, long accountId, string functionName, string qualifier = null)
     {
       Check.NotNull(region, nameof(region));
       Check.That(accountId > 0, "accountId > 0");
@@ -41,7 +36,11 @@ namespace Amazon.Lambda.Model
       Region       = region;
       AccountId    = accountId;
       FunctionName = functionName;
-      Qualifier    = qualifier;
+
+      if (!string.IsNullOrEmpty(qualifier))
+      {
+        Qualifier = qualifier;
+      }
     }
 
     public RegionEndpoint Region       { get; }
