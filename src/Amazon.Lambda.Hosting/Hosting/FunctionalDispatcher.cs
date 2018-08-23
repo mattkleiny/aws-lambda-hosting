@@ -58,7 +58,6 @@ namespace Amazon.Lambda.Hosting
     /// <summary>A wrapper for a functional invocation target.</summary>
     internal sealed class TargetFunction
     {
-      private readonly MethodInfo      method;
       private readonly ParameterInfo[] parameters;
 
       public TargetFunction(MethodInfo method, string functionName)
@@ -66,15 +65,17 @@ namespace Amazon.Lambda.Hosting
         Check.NotNull(method, nameof(method));
         Check.NotNullOrEmpty(functionName, nameof(functionName));
 
-        this.method = method;
-        parameters  = method.GetParameters().ToArray();
+        parameters = method.GetParameters().ToArray();
 
+        Method       = method;
         FunctionName = functionName;
-        Metadata     = LambdaHandlerMetadata.ForFunction(this);
+
+        Metadata = LambdaHandlerMetadata.ForFunction(this);
       }
 
-      public string FunctionName { get; }
-      public string FriendlyName => method.Name;
+      public MethodInfo Method       { get; }
+      public string     FunctionName { get; }
+      public string     FriendlyName => Method.Name;
 
       /// <summary>A <see cref="LambdaHandlerMetadata"/> just to keep the matching strategies consistent.</summary>
       internal LambdaHandlerMetadata Metadata { get; }
@@ -94,8 +95,8 @@ namespace Amazon.Lambda.Hosting
           return services.GetRequiredService(parameter.ParameterType);
         });
 
-        var handler = method.IsStatic ? null : services.GetRequiredService<THandler>();
-        var result  = method.Invoke(handler, arguments.ToArray());
+        var handler = Method.IsStatic ? null : services.GetRequiredService<THandler>();
+        var result  = Method.Invoke(handler, arguments.ToArray());
 
         return result is Task ? result : Task.FromResult(result);
       }

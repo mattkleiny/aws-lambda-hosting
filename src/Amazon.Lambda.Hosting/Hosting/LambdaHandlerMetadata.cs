@@ -1,22 +1,27 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Amazon.Lambda.Hosting
 {
   /// <summary>Encapsulates metadata for a registered <see cref="ILambdaHandler"/>.</summary>
   public sealed class LambdaHandlerMetadata
   {
-    // TODO: add input/output types
-
     internal static LambdaHandlerMetadata ForHandler<THandler>(string functionName)
       where THandler : class, ILambdaHandler
     {
       Check.NotNullOrEmpty(functionName, nameof(functionName));
+
+      var method = typeof(THandler).GetMethod(nameof(ILambdaHandler.ExecuteAsync));
+      var (inputType, outputType) = ExtractTypes(method);
 
       return new LambdaHandlerMetadata
       {
         HandlerType  = typeof(THandler),
         FunctionName = functionName,
         FriendlyName = typeof(THandler).Name,
+        InputType    = inputType,
+        OutputType   = outputType
       };
     }
 
@@ -25,12 +30,26 @@ namespace Amazon.Lambda.Hosting
     {
       Check.NotNull(function, nameof(function));
 
+      var (inputType, outputType) = ExtractTypes(function.Method);
+
       return new LambdaHandlerMetadata
       {
         HandlerType  = typeof(FunctionalDispatcher<THandler>),
         FunctionName = function.FunctionName,
-        FriendlyName = function.FriendlyName
+        FriendlyName = function.FriendlyName,
+        InputType    = inputType,
+        OutputType   = outputType
       };
+    }
+
+    // TODO: fix this up
+
+    private static (Type inputType, Type outputType) ExtractTypes(MethodInfo method)
+    {
+      var inputType  = method.GetParameters().FirstOrDefault()?.ParameterType;
+      var outputType = method.ReturnType;
+
+      return (inputType, outputType);
     }
 
     private LambdaHandlerMetadata()
