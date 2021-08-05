@@ -2,6 +2,7 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <RepositoryUrl>https://github.com/mattkleiny/aws-lambda-hosting</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
     <Product>Amazon Lambda Hosting</Product>
