@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>A runtime for aiding in the construction of Amazon Lambda functions using .NET Core.</Description>
   </PropertyGroup>

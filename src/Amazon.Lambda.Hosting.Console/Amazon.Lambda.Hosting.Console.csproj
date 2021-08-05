@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>A set of extensions for running runtime based functions from the CLI.</Description>
   </PropertyGroup>
