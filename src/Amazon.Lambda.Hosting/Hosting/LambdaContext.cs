@@ -26,8 +26,11 @@ namespace Amazon.Lambda.Hosting
       Check.That(accountId > 0, "accountId > 0");
       Check.NotNullOrEmpty(functionName, nameof(functionName));
 
-      var arn = new LambdaARN(region, accountId, functionName, qualifier);
+      return ForFunction(new LambdaARN(region, accountId, functionName, qualifier));
+    }
 
+    public static LambdaContext ForFunction(LambdaARN arn)
+    {
       return new LambdaContext
       {
         FunctionName       = arn.FunctionName,

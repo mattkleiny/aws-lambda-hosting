@@ -7,7 +7,6 @@ ProjectSection(SolutionItems) = preProject
 	Shared.props = Shared.props
 	Tests.props = Tests.props
 	LICENSE.md = LICENSE.md
-	.github\workflows\build-and-package.yml = .github\workflows\build-and-package.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared Code", "Shared Code", "{E71C5698-1F9A-435F-9642-010FFF15CDC0}"
@@ -51,6 +50,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Hosting.StepFunctions", "src\Amazon.Lambda.Hosting.StepFunctions\Amazon.Lambda.Hosting.StepFunctions.csproj", "{B62CEE64-6C42-4AB7-A423-CA2B24014B19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Lambda.Hosting.SSM", "src\Amazon.Lambda.Hosting.SSM\Amazon.Lambda.Hosting.SSM.csproj", "{85D2BA4D-32C3-436E-B220-4C97BFD02B74}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{828E770C-D1FA-4F75-BFC8-F75B1B5F4599}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\build-and-package.yml = .github\workflows\build-and-package.yml
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,5 +138,6 @@ Global
 		{30754DF1-8C8E-474C-B5EB-0FB961CC8F42} = {5D06B973-72EA-4DB5-99D5-36D849ECCFF9}
 		{B62CEE64-6C42-4AB7-A423-CA2B24014B19} = {08FD12B7-6CFA-4AB0-BDBB-6574915724A3}
 		{85D2BA4D-32C3-436E-B220-4C97BFD02B74} = {08FD12B7-6CFA-4AB0-BDBB-6574915724A3}
+		{828E770C-D1FA-4F75-BFC8-F75B1B5F4599} = {8635ADB4-678B-4C65-A503-5FDB8B5C2963}
 	EndGlobalSection
 EndGlobal
