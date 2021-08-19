@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -26,24 +27,19 @@ namespace Amazon.Lambda.Hosting
           typeof(THandler).GetMethods(BindingFlags.Public | BindingFlags.Static)
         )
         .Where(method => method.GetCustomAttribute<LambdaFunctionAttribute>() != null)
-        .Select(method => new TargetFunction(method, method.GetCustomAttribute<LambdaFunctionAttribute>().FunctionName))
+        .Select(method => new TargetFunction(method, method.GetCustomAttribute<LambdaFunctionAttribute>()!.FunctionName))
         .ToArray();
 
     public FunctionalDispatcher(IHost host, IOptions<HostingOptions> hostingOptions, TargetFunction[] functions)
     {
-      Check.NotNull(host,      nameof(host));
-      Check.NotNull(functions, nameof(functions));
-
       this.host      = host;
       this.functions = functions;
 
       isMatch = hostingOptions.Value.MatchingStrategy;
     }
 
-    public async Task<object> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
+    public async Task<object?> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
-      Check.NotNull(context, nameof(context));
-
       foreach (var function in functions)
       {
         if (isMatch(function.Metadata, context))
@@ -62,8 +58,7 @@ namespace Amazon.Lambda.Hosting
 
       public TargetFunction(MethodInfo method, string functionName)
       {
-        Check.NotNull(method, nameof(method));
-        Check.NotNullOrEmpty(functionName, nameof(functionName));
+        Debug.Assert(!string.IsNullOrEmpty(functionName), "!string.IsNullOrEmpty(functionName)");
 
         parameters = method.GetParameters().ToArray();
 
@@ -77,8 +72,9 @@ namespace Amazon.Lambda.Hosting
       public string     FunctionName { get; }
       public string     FriendlyName => Method.Name;
 
-      /// <summary>A <see cref="LambdaHandlerMetadata"/> just to keep the matching strategies consistent.</summary>
       internal LambdaHandlerMetadata Metadata { get; }
+
+      // TODO: remove the dynamic dispatch
 
       /// <summary>Invokes the underlying method, injecting it's parameters as required.</summary>
       public dynamic Invoke(object input, ILambdaContext context, IServiceProvider services, CancellationToken cancellationToken)

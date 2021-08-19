@@ -5,16 +5,26 @@ using Amazon.Lambda.Hosting;
 
 namespace Amazon.Lambda.Testing
 {
-  /// <summary>The default <see cref="LambdaUnderTest{THandler}"/> implementation.</summary>
+  /// <summary>
+  /// Denotes a <see cref="ILambdaHandler"/> that is bootstrapped for testing.
+  /// <para/>
+  /// Provides a convenience interface for execution of the Lambda itself as well as a common extension point for configuration.
+  /// </summary>
+  public interface ILambdaUnderTest<out THandler>
+    where THandler : class, ILambdaHandler
+  {
+    LambdaContext    Context  { get; }
+    THandler         Handler  { get; }
+    IServiceProvider Services { get; }
+
+    Task<object?> ExecuteAsync(object input, CancellationToken cancellationToken = default);
+  }
+
   internal sealed class LambdaUnderTest<THandler> : ILambdaUnderTest<THandler>
     where THandler : class, ILambdaHandler
   {
     public LambdaUnderTest(LambdaContext context, THandler handler, IServiceProvider services)
     {
-      Check.NotNull(context,  nameof(context));
-      Check.NotNull(handler,  nameof(handler));
-      Check.NotNull(services, nameof(services));
-
       Context  = context;
       Handler  = handler;
       Services = services;
@@ -24,19 +34,18 @@ namespace Amazon.Lambda.Testing
     public THandler         Handler  { get; }
     public IServiceProvider Services { get; }
 
-    public Task<object> ExecuteAsync(object input, CancellationToken cancellationToken)
+    public Task<object?> ExecuteAsync(object input, CancellationToken cancellationToken)
     {
       // limit the execution time of the lambda based on the remaining time in the context
-      using (var timeLimit = new CancellationTokenSource(Context.RemainingTime))
-      using (var linkedTokens = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeLimit.Token))
-      {
-        if (linkedTokens.IsCancellationRequested)
-        {
-          return Task.FromCanceled<object>(linkedTokens.Token);
-        }
+      using var timeLimit    = new CancellationTokenSource(Context.RemainingTime);
+      using var linkedTokens = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeLimit.Token);
 
-        return Handler.ExecuteAsync(input, Context, linkedTokens.Token);
+      if (linkedTokens.IsCancellationRequested)
+      {
+        return Task.FromCanceled<object?>(linkedTokens.Token);
       }
+
+      return Handler.ExecuteAsync(input, Context, linkedTokens.Token);
     }
   }
 }

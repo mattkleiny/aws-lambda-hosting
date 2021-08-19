@@ -16,8 +16,6 @@ namespace Amazon.Lambda.Testing
 
     public LambdaTestFixture(IHostBuilder builder)
     {
-      Check.NotNull(builder, nameof(builder));
-
       host = builder.Build();
     }
 

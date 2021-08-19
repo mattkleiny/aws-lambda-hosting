@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Amazon.Lambda</RootNamespace>
     <Description>A runtime for aiding in the construction of Amazon Lambda functions using .NET Core.</Description>
   </PropertyGroup>
-  <Import Project="../../Shared.props" />
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
     <PackageReference Include="AWSSDK.Core" Version="3.3.24.3" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Amazon.Lambda.Services
 {
@@ -12,15 +13,11 @@ namespace Amazon.Lambda.Services
   /// </summary>
   public sealed class RedirectTable : IEnumerable<KeyValuePair<string, Uri>>
   {
-    private readonly IDictionary<string, Uri> entries = new Dictionary<string, Uri>(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, Uri> entries = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>Determines if the given service contains an entry in the table.</summary>
-    public bool Contains(string service) => entries.ContainsKey(service);
+    public bool Contains(string service)           => entries.ContainsKey(service);
+    public bool Contains(WellKnownService service) => Contains(service.Key);
 
-    /// <summary>Determines if the given <see cref="WellKnownService"/> contains an entry in the table.</summary>
-    public bool Contains(WellKnownService service) => Contains(ResolveService(service));
-
-    /// <summary>Sets the redirect <see cref="Uri"/> for the given service.</summary>
     public Uri this[string service]
     {
       get
@@ -34,34 +31,16 @@ namespace Amazon.Lambda.Services
       }
       set
       {
-        Check.That(value.IsAbsoluteUri, $"The URI provided for {service} needs to be absolute");
+        Debug.Assert(value.IsAbsoluteUri, $"The URI provided for {service} needs to be absolute");
 
         entries[service] = value;
       }
     }
 
-    /// <summary>Sets the redirect <see cref="Uri"/> for the given <see cref="WellKnownService"/> .</summary>
     public Uri this[WellKnownService service]
     {
-      get => this[ResolveService(service)];
-      set => this[ResolveService(service)] = value;
-    }
-
-    private static string ResolveService(WellKnownService service)
-    {
-      switch (service)
-      {
-        case WellKnownService.Dynamo:        return "dynamo";
-        case WellKnownService.ElastiCache:   return "elasticache";
-        case WellKnownService.S3:            return "s3";
-        case WellKnownService.SNS:           return "sns";
-        case WellKnownService.SQS:           return "sqs";
-        case WellKnownService.Lambda:        return "lambda";
-        case WellKnownService.StepFunctions: return "stepfunctions";
-
-        default:
-          throw new ArgumentException($"An unrecognized service was provided: {service}");
-      }
+      get => this[service.Key];
+      set => this[service.Key] = value;
     }
 
     public IEnumerator<KeyValuePair<string, Uri>> GetEnumerator() => entries.GetEnumerator();

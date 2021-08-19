@@ -2,16 +2,24 @@
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 
-namespace Amazon.Lambda.Hosting
+namespace Amazon.Lambda
 {
+  /// <summary>A strongly-typed lambda handler for the application pipeline.</summary>
+  public interface ILambdaHandler
+  {
+    /// <summary>Executes the handler asynchronously with the given input and context.</summary>
+    Task<object?> ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken = default);
+  }
+
   /// <summary>A strongly-typed <see cref="ILambdaHandler"/> that expects no input and provides no output.</summary>
   public abstract class LambdaHandler : ILambdaHandler
   {
     public abstract Task ExecuteAsync(ILambdaContext context, CancellationToken cancellationToken = default);
 
-    async Task<object> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
+    async Task<object?> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
       await ExecuteAsync(context, cancellationToken);
+
       return null;
     }
   }
@@ -21,9 +29,9 @@ namespace Amazon.Lambda.Hosting
   {
     public abstract Task<object> ExecuteAsync(T input, ILambdaContext context, CancellationToken cancellationToken = default);
 
-    async Task<object> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
+    async Task<object?> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
-      return await ExecuteAsync((T) input, context, cancellationToken);
+      return await ExecuteAsync((T)input, context, cancellationToken);
     }
   }
 
@@ -32,9 +40,9 @@ namespace Amazon.Lambda.Hosting
   {
     public abstract Task<TOutput> ExecuteAsync(TInput input, ILambdaContext context, CancellationToken cancellationToken = default);
 
-    async Task<object> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
+    async Task<object?> ILambdaHandler.ExecuteAsync(object input, ILambdaContext context, CancellationToken cancellationToken)
     {
-      return await ExecuteAsync((TInput) input, context, cancellationToken);
+      return await ExecuteAsync((TInput)input, context, cancellationToken);
     }
   }
 }

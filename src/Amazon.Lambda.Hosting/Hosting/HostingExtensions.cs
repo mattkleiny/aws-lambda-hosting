@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -29,24 +30,17 @@ namespace Amazon.Lambda.Hosting
     {
       void ConfigureStartup(HostBuilderContext context, IServiceCollection collection)
       {
-        if (typeof(IStartup).IsAssignableFrom(typeof(TStartup)))
-        {
-          collection.AddSingleton(typeof(IStartup), typeof(TStartup));
-        }
-        else
-        {
-          collection.AddSingleton<TStartup>();
-          collection.AddSingleton<IStartup>(provider => new ConventionBasedStartup(
-            startup: provider.GetRequiredService<TStartup>(),
-            environment: context.HostingEnvironment
-          ));
-        }
+        collection.AddSingleton<TStartup>();
+        collection.AddSingleton(provider => new ConventionBasedStartup(
+          startup: provider.GetRequiredService<TStartup>(),
+          environment: context.HostingEnvironment
+        ));
       }
 
       void ApplyContainerConventions(HostBuilderContext context, IServiceCollection collection)
       {
         var baseServices = collection.BuildServiceProvider();
-        var startup      = baseServices.GetRequiredService<IStartup>();
+        var startup      = baseServices.GetRequiredService<ConventionBasedStartup>();
 
         startup.ConfigureServices(collection);
 
@@ -64,35 +58,23 @@ namespace Amazon.Lambda.Hosting
       return builder;
     }
 
-    /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
-    public static async Task<object> RunLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context, CancellationToken cancellationToken = default)
+    public static async Task<object?> ExecuteLambdaAsync(this IHostBuilder builder, object input, ILambdaContext context, CancellationToken cancellationToken = default)
     {
-      Check.NotNull(context, nameof(context));
+      using var host = builder.Build();
 
-      using (var host = builder.Build())
-      {
-        return await host.RunLambdaAsync(input, context, cancellationToken);
-      }
+      return await host.ExecuteLambdaAsync(input, context, cancellationToken);
     }
 
-    /// <summary>Executes the appropriate <see cref="ILambdaHandler"/> for given input and <see cref="ILambdaContext"/>.</summary>
-    public static async Task<object> RunLambdaAsync(this IHost host, object input, ILambdaContext context, CancellationToken cancellationToken = default)
+    public static async Task<object?> ExecuteLambdaAsync(this IHost host, object input, ILambdaContext context, CancellationToken cancellationToken = default)
     {
-      Check.NotNull(context, nameof(context));
+      using var scope   = host.Services.CreateScope();
+      var       handler = scope.ServiceProvider.ResolveLambdaHandler(context);
 
-      using (var scope = host.Services.CreateScope())
-      {
-        var handler = scope.ServiceProvider.ResolveLambdaHandler(context);
-
-        return await handler.ExecuteAsync(input, context, cancellationToken);
-      }
+      return await handler.ExecuteAsync(input, context, cancellationToken);
     }
 
-    /// <summary>Resolves the appropriate <see cref="LambdaHandlerMetadata"/> for the given context.</summary>
     public static LambdaHandlerMetadata ResolveLambdaHandlerMetadata(this IServiceProvider services, ILambdaContext context)
     {
-      Check.NotNull(context, nameof(context));
-
       if (!services.TryResolveLambdaHandlerMetadata(context, out var metadata))
       {
         throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
@@ -101,11 +83,8 @@ namespace Amazon.Lambda.Hosting
       return metadata;
     }
 
-    /// <summary>Attempts to resolve the <see cref="LambdaHandlerMetadata"/> for the given context.</summary>
     public static bool TryResolveLambdaHandlerMetadata(this IServiceProvider services, ILambdaContext context, out LambdaHandlerMetadata result)
     {
-      Check.NotNull(context, nameof(context));
-      
       var metadatas = services.GetServices<LambdaHandlerMetadata>();
       var isMatch   = services.GetRequiredService<IOptions<HostingOptions>>().Value.MatchingStrategy;
 
@@ -118,15 +97,12 @@ namespace Amazon.Lambda.Hosting
         }
       }
 
-      result = null;
+      result = null!;
       return false;
     }
 
-    /// <summary>Resolves the appropriate <see cref="ILambdaHandler"/> for the given context.</summary>
     public static ILambdaHandler ResolveLambdaHandler(this IServiceProvider services, ILambdaContext context)
     {
-      Check.NotNull(context, nameof(context));
-
       if (!services.TryResolveLambdaHandler(context, out var handler))
       {
         throw new UnresolvedHandlerException($"Unable to locate an appropriate handler for the function {context.FunctionName}");
@@ -135,33 +111,26 @@ namespace Amazon.Lambda.Hosting
       return handler;
     }
 
-    /// <summary>Attempts to resolve the <see cref="ILambdaHandler"/> for the given context.</summary>
     public static bool TryResolveLambdaHandler(this IServiceProvider services, ILambdaContext context, out ILambdaHandler handler)
     {
-      Check.NotNull(context, nameof(context));
-
       if (services.TryResolveLambdaHandlerMetadata(context, out var metadata))
       {
-        handler = (ILambdaHandler) services.GetRequiredService(metadata.HandlerType);
+        handler = (ILambdaHandler)services.GetRequiredService(metadata.HandlerType);
         return true;
       }
 
-      handler = null;
+      handler = null!;
       return false;
     }
 
-    /// <summary>Resolves the <see cref="ILambdaHandler"/> and it's associated <see cref="LambdaHandlerMetadata"/>.</summary>
     public static (ILambdaHandler, LambdaHandlerMetadata) ResolveLambdaHandlerWithMetadata(this IServiceProvider services, ILambdaContext context)
     {
-      Check.NotNull(context, nameof(context));
-
       var metadata = services.ResolveLambdaHandlerMetadata(context);
-      var handler  = (ILambdaHandler) services.GetRequiredService(metadata.HandlerType);
+      var handler  = (ILambdaHandler)services.GetRequiredService(metadata.HandlerType);
 
       return (handler, metadata);
     }
 
-    /// <summary>Maps the given <see cref="ILambdaHandler"/> with it's associate <see cref="LambdaFunctionAttribute.FunctionName"/> in the host.</summary>
     public static IServiceCollection AddHandler<THandler>(this IServiceCollection services)
       where THandler : class, ILambdaHandler
     {
@@ -175,11 +144,10 @@ namespace Amazon.Lambda.Hosting
       return services.AddHandler<THandler>(attribute.FunctionName);
     }
 
-    /// <summary>Maps the given <see cref="ILambdaHandler"/> to the given <see cref="functionName"/> in the host.</summary>
     public static IServiceCollection AddHandler<THandler>(this IServiceCollection services, string functionName)
       where THandler : class, ILambdaHandler
     {
-      Check.NotNullOrEmpty(functionName, nameof(functionName));
+      Debug.Assert(!string.IsNullOrEmpty(functionName), "!string.IsNullOrEmpty(functionName)");
 
       services.AddScoped<THandler>();
       services.AddSingleton(LambdaHandlerMetadata.ForHandler<THandler>(functionName));
@@ -187,7 +155,6 @@ namespace Amazon.Lambda.Hosting
       return services;
     }
 
-    /// <summary>Maps the functional handlers from the given classes publically accessible <see cref="LambdaFunctionAttribute"/> annotated methods.</summary>
     public static IServiceCollection AddFunctionalHandlers<THandler>(this IServiceCollection services)
       where THandler : class
     {
@@ -213,11 +180,8 @@ namespace Amazon.Lambda.Hosting
       return services;
     }
 
-    /// <summary>Configures the <see cref="HostingOptions"/> for the application.</summary>
     public static IServiceCollection ConfigureHostingOptions(this IServiceCollection services, Action<HostingOptions> configurer)
     {
-      Check.NotNull(configurer, nameof(configurer));
-
       services.Configure(configurer);
 
       return services;

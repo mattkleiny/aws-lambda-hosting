@@ -1,11 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Amazon.Lambda.Hosting
+namespace Amazon.Lambda
 {
-  /// <summary>
-  /// Denotes the associated <see cref="ILambdaHandler"/> is mapped to the given Lambda <see cref="FunctionName"/>.
-  /// </summary>
+  /// <summary>Denotes the associated <see cref="ILambdaHandler"/> is mapped to the given lambda function name.</summary>
   [MeansImplicitUse]
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
   public sealed class LambdaFunctionAttribute : Attribute

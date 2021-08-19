@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
-using Amazon.Lambda.Diagnostics;
-using Amazon.Lambda.Hosting.Example.Handlers;
-using Amazon.Lambda.Hosting.Example.Services;
 using Amazon.Lambda.Serialization.Json;
 using Amazon.Lambda.Services;
-using Amazon.S3;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +15,7 @@ namespace Amazon.Lambda.Hosting.Example
 {
   public sealed class Startup
   {
-    /// <summary>The <see cref="IHostBuilder"/> for this example.</summary>
-    public static IHostBuilder HostBuilder => new HostBuilder()
+    public static IHostBuilder HostBuilder { get; } = new HostBuilder()
       .ConfigureAppConfiguration((context, builder) =>
       {
         var environment = context.HostingEnvironment.EnvironmentName;
@@ -33,34 +27,23 @@ namespace Amazon.Lambda.Hosting.Example
       })
       .UseStartup<Startup>();
 
-    /// <summary>This is the entry point from the CLI.</summary>
-    public static Task<int> Main(string[] args)
-      => HostBuilder.RunLambdaConsoleAsync(args);
-
-    /// <summary>This is the entry point from AWS.</summary>
     [UsedImplicitly]
-    public static Task<object> ExecuteAsync(object input, ILambdaContext context)
-      => HostBuilder.RunLambdaAsync(input, context);
+    public static Task<object?> ExecuteAsync(object input, ILambdaContext context)
+    {
+      return HostBuilder.ExecuteLambdaAsync(input, context);
+    }
 
-    public Startup(IHostingEnvironment environment, IConfiguration configuration)
+    public Startup(IHostEnvironment environment, IConfiguration configuration)
     {
       Environment   = environment;
       Configuration = configuration;
     }
 
-    public IHostingEnvironment Environment   { get; }
-    public IConfiguration      Configuration { get; }
-
-    [LambdaFunction("handler-3")]
-    public async Task<object> Handler3(object input, ILambdaContext context, ITestService testService, IServiceProvider services)
-    {
-      var (handler, metadata) = services.ResolveLambdaHandlerWithMetadata(context);
-
-      return await testService.GetMessageAsync();
-    }
+    public IHostEnvironment Environment   { get; }
+    public IConfiguration   Configuration { get; }
 
     [LambdaFunction("handler-4")]
-    public Task<object> Handler4(object input, IAmazonS3 s3, IAmazonDynamoDB dynamo, ITestService testService, ILambdaContext context)
+    public Task<object> Handler4(object input, ILambdaContext context)
     {
       return Task.FromResult<object>("Hello from Handler 4");
     }
@@ -76,24 +59,14 @@ namespace Amazon.Lambda.Hosting.Example
     {
       services.AddLogging(builder =>
       {
-        builder.AddLambdaLogger();
-        builder.SetMinimumLevel(Environment.IsDevelopment() ? LogLevel.Trace : LogLevel.Information);
+        var logLevel = Environment.IsDevelopment()
+          ? LogLevel.Trace
+          : LogLevel.Information;
+
+        builder.SetMinimumLevel(logLevel);
       });
 
-      services.AddDynamo();
-      services.AddElastiCache();
-      services.AddLambda();
-      services.AddS3();
-      services.AddSNS();
-      services.AddSQS();
-      services.AddSSM();
-      services.AddStepFunctions();
-
-      services.AddHandler<Handler1>();
-      services.AddHandler<Handler2>();
       services.AddFunctionalHandlers<Startup>();
-
-      services.AddScoped<ITestService, TestService>();
 
       services.ConfigureHostingOptions(options =>
       {
